@@ -6,7 +6,20 @@ import {
   sendEmailVerification,
   onAuthStateChanged
 } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { 
+  doc, 
+  setDoc, 
+  getDoc, 
+  updateDoc, 
+  collection, 
+  query, 
+  where, 
+  getDocs,
+  arrayRemove,
+  arrayUnion,
+  addDoc,
+  serverTimestamp
+} from 'firebase/firestore';
 import { auth, db } from '../firebase/firebase';
 
 const AuthContext = createContext();
@@ -19,7 +32,27 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [profileLoading, setProfileLoading] = useState(false); // New state for profile loading
+  const [profileLoading, setProfileLoading] = useState(false);
+
+  // Create notification helper function
+  const createNotification = async (userId, type, title, message, data = {}) => {
+    try {
+      const notification = {
+        userId,
+        type,
+        title,
+        message,
+        data,
+        read: false,
+        createdAt: serverTimestamp()
+      };
+
+      await addDoc(collection(db, 'notifications'), notification);
+      console.log('Notification created:', title);
+    } catch (error) {
+      console.error('Error creating notification:', error);
+    }
+  };
 
   // Enhanced signup function with user profile
   async function signup(email, password, userData) {
@@ -41,6 +74,14 @@ export function AuthProvider({ children }) {
         createdAt: new Date(),
         emailVerified: false
       });
+      
+      // Create welcome notification
+      await createNotification(
+        result.user.uid,
+        'welcome',
+        'Welcome to CollaBase! 🎉',
+        'Start by browsing teams or creating your own project. Connect with fellow students and build amazing things together!'
+      );
       
       console.log('User created with profile:', result.user.email);
       return result;
@@ -81,6 +122,14 @@ export function AuthProvider({ children }) {
         createdAt: new Date(),
         emailVerified: currentUser.emailVerified
       });
+      
+      // Create welcome notification
+      await createNotification(
+        currentUser.uid,
+        'welcome',
+        'Profile Setup Complete! 🎉',
+        'Your profile is now ready. Start exploring teams and projects that match your skills!'
+      );
       
       // Refresh user profile
       const profile = await getUserProfile(currentUser.uid);
@@ -133,6 +182,78 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // Apply to join a team
+  async function applyToTeam(teamId) {
+    try {
+      if (!currentUser || !userProfile) throw new Error('No user logged in');
+      
+      const teamRef = doc(db, 'teams', teamId);
+      const teamDoc = await getDoc(teamRef);
+      
+      if (!teamDoc.exists()) {
+        throw new Error('Team not found');
+      }
+      
+      const teamData = teamDoc.data();
+      const currentApplications = teamData.applications || [];
+      
+      // Check if user already applied
+      if (currentApplications.includes(currentUser.uid)) {
+        throw new Error('You have already applied to this team');
+      }
+      
+      // Add user to applications array
+      await updateDoc(teamRef, {
+        applications: [...currentApplications, currentUser.uid]
+      });
+
+      // Create notification for team owner
+      await createNotification(
+        teamData.createdBy,
+        'application_received',
+        'New Team Application! 📝',
+        `${userProfile.name} has applied to join your team "${teamData.title}". Review their profile and skills to make a decision.`,
+        { teamId, teamTitle: teamData.title, applicantId: currentUser.uid, applicantName: userProfile.name }
+      );
+
+      // Create notification for applicant
+      await createNotification(
+        currentUser.uid,
+        'application_sent',
+        'Application Sent! ✅',
+        `Your application to join "${teamData.title}" has been sent. The team lead will review your profile and get back to you soon.`,
+        { teamId, teamTitle: teamData.title }
+      );
+      
+      console.log('Applied to team successfully');
+      return true;
+    } catch (error) {
+      console.error('Error applying to team:', error);
+      throw error;
+    }
+  }
+
+  // Get teams user has applied to
+  async function getUserApplications() {
+    try {
+      if (!currentUser) return [];
+      
+      const teamsQuery = query(
+        collection(db, 'teams'), 
+        where('applications', 'array-contains', currentUser.uid)
+      );
+      const querySnapshot = await getDocs(teamsQuery);
+      
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+    } catch (error) {
+      console.error('Error fetching user applications:', error);
+      return [];
+    }
+  }
+
   // Listen for authentication state changes
   useEffect(() => {
     console.log('Setting up auth listener...');
@@ -163,12 +284,15 @@ export function AuthProvider({ children }) {
     currentUser,
     userProfile,
     loading,
-    profileLoading, // Add this to the context
+    profileLoading,
     signup,
     createAccount,
     addUserProfile,
     login,
-    logout
+    logout,
+    applyToTeam,
+    getUserApplications,
+    createNotification
   };
 
   return (
