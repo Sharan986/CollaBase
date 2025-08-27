@@ -1,15 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { collection, query, where, onSnapshot, doc, updateDoc, arrayRemove, arrayUnion, getDoc, serverTimestamp, addDoc } from 'firebase/firestore';
+import { useToast } from '../contexts/ToastContext';
+import { useDashboardNotifications } from '../contexts/DashboardNotificationContext';
+import { useLocation } from 'react-router-dom';
+import { collection, query, where, onSnapshot, doc, updateDoc, arrayRemove, arrayUnion, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 
 function ManageTeamsPage() {
-  const { currentUser, userProfile, createNotification } = useAuth();
+  const { currentUser, userProfile } = useAuth();
+  const { showToast } = useToast();
+  const { createDashboardNotification } = useDashboardNotifications();
+  const location = useLocation();
+  
+  // Get tab from URL parameters, default to 'created'
+  const getInitialTab = () => {
+    const params = new URLSearchParams(location.search);
+    const tab = params.get('tab');
+    return tab === 'member' ? 'member' : 'created';
+  };
+  
   const [myTeams, setMyTeams] = useState([]);
+  const [memberTeams, setMemberTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
   const [expandedTeam, setExpandedTeam] = useState(null);
   const [applicantProfiles, setApplicantProfiles] = useState({});
+  const [activeTab, setActiveTab] = useState(getInitialTab());
+  const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
+  const [selectedTeamForWhatsApp, setSelectedTeamForWhatsApp] = useState(null);
+  const [whatsappLinkInput, setWhatsappLinkInput] = useState('');
 
   // Listen for teams created by current user in real-time
   useEffect(() => {
@@ -28,6 +47,36 @@ function ManageTeamsPage() {
       setMyTeams(teamsData);
       setLoading(false);
       console.log('My teams updated:', teamsData.length);
+    });
+
+    return unsubscribe;
+  }, [currentUser]);
+
+  // Listen for teams where current user is a member
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const q = query(collection(db, 'teams'));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const teamsWhereUserIsMember = [];
+      
+      snapshot.docs.forEach(doc => {
+        const teamData = doc.data();
+        // Check if current user is in the members array
+        if (teamData.members && teamData.members.some(member => member.userId === currentUser.uid)) {
+          // Only include if user is not the creator (avoid duplicates)
+          if (teamData.createdBy !== currentUser.uid) {
+            teamsWhereUserIsMember.push({
+              id: doc.id,
+              ...teamData
+            });
+          }
+        }
+      });
+      
+      setMemberTeams(teamsWhereUserIsMember);
+      console.log('Member teams updated:', teamsWhereUserIsMember.length);
     });
 
     return unsubscribe;
@@ -56,7 +105,8 @@ function ManageTeamsPage() {
       setExpandedTeam(null);
     } else {
       setExpandedTeam(teamId);
-      const team = myTeams.find(t => t.id === teamId);
+      // Find team in either myTeams or memberTeams
+      const team = myTeams.find(t => t.id === teamId) || memberTeams.find(t => t.id === teamId);
       if (team?.applications?.length > 0) {
         await fetchApplicantProfiles(team.applications);
       }
@@ -76,7 +126,7 @@ function ManageTeamsPage() {
         name: applicantProfile.name,
         role: 'Member',
         skills: applicantProfile.skills || [],
-        joinedAt: serverTimestamp()
+        joinedAt: new Date()
       };
 
       // Update team: remove from applications, add to members, increment currentMembers
@@ -86,28 +136,26 @@ function ManageTeamsPage() {
         currentMembers: team.currentMembers + 1
       });
 
-      // Create notification for accepted applicant
-      await createNotification(
+      // Create dashboard notification for accepted applicant
+      const message = team.whatsappLink 
+        ? `Congratulations! You've been accepted to join "${team.title}". Welcome to the team! 🎉 Join the WhatsApp group to start collaborating.`
+        : `Congratulations! You've been accepted to join "${team.title}". Welcome to the team! 🎉`;
+        
+      await createDashboardNotification(
         applicantId,
-        'application_accepted',
-        'Application Accepted! 🎉',
-        `Congratulations! You've been accepted to join "${team.title}". Welcome to the team!`,
-        { teamId, teamTitle: team.title }
+        'accepted',
+        teamId,
+        team.title,
+        message
       );
 
-      // Create notification for team owner
-      await createNotification(
-        currentUser.uid,
-        'member_joined',
-        'New Team Member! 👥',
-        `${applicantProfile.name} has joined your team "${team.title}". Your team is growing!`,
-        { teamId, teamTitle: team.title, memberName: applicantProfile.name }
-      );
+      // Show success toast
+      showToast(`${applicantProfile.name} accepted to ${team.title}! 🎉`, 'success');
 
       console.log(`Accepted ${applicantProfile.name} to team`);
     } catch (error) {
       console.error('Error accepting application:', error);
-      alert('Failed to accept application. Please try again.');
+      showToast('Failed to accept application. Please try again.', 'error');
     } finally {
       setActionLoading(null);
     }
@@ -125,19 +173,22 @@ function ManageTeamsPage() {
         applications: arrayRemove(applicantId)
       });
 
-      // Create notification for rejected applicant
-      await createNotification(
+      // Create dashboard notification for rejected applicant
+      await createDashboardNotification(
         applicantId,
-        'application_rejected',
-        'Application Update 📋',
-        `Thank you for your interest in "${team.title}". Unfortunately, we've decided to go with other candidates this time. Keep exploring other amazing projects!`,
-        { teamId, teamTitle: team.title }
+        'rejected',
+        teamId,
+        team.title,
+        `Thank you for your interest in "${team.title}". Unfortunately, we've decided to go with other candidates this time. Keep exploring other amazing projects! 💪`
       );
+
+      // Show notification toast
+      showToast(`Application from ${applicantProfile.name} was declined`, 'info');
 
       console.log(`Rejected ${applicantProfile.name} from team`);
     } catch (error) {
       console.error('Error rejecting application:', error);
-      alert('Failed to reject application. Please try again.');
+      showToast('Failed to reject application. Please try again.', 'error');
     } finally {
       setActionLoading(null);
     }
@@ -162,21 +213,54 @@ function ManageTeamsPage() {
         currentMembers: team.currentMembers - 1
       });
 
-      // Create notification for removed member
-      await createNotification(
-        memberId,
-        'member_removed',
-        'Team Update 👋',
-        `You have been removed from the team "${team.title}". Thank you for your contributions!`,
-        { teamId, teamTitle: team.title }
-      );
+      // Show success toast
+      showToast(`${memberName} removed from team`, 'info');
 
       console.log(`Removed ${memberName} from team`);
     } catch (error) {
       console.error('Error removing member:', error);
-      alert('Failed to remove member. Please try again.');
+      showToast('Failed to remove member. Please try again.', 'error');
     } finally {
       setActionLoading(null);
+    }
+  };
+
+  // WhatsApp Group Functions
+  const openWhatsAppModal = (team) => {
+    setSelectedTeamForWhatsApp(team);
+    setWhatsappLinkInput(team.whatsappLink || '');
+    setShowWhatsAppModal(true);
+  };
+
+  const closeWhatsAppModal = () => {
+    setShowWhatsAppModal(false);
+    setSelectedTeamForWhatsApp(null);
+    setWhatsappLinkInput('');
+  };
+
+  const saveWhatsAppLink = async () => {
+    if (!selectedTeamForWhatsApp || !whatsappLinkInput.trim()) {
+      showToast('Please enter a valid WhatsApp group link', 'error');
+      return;
+    }
+
+    // Basic WhatsApp link validation
+    if (!whatsappLinkInput.includes('whatsapp.com') && !whatsappLinkInput.includes('wa.me')) {
+      showToast('Please enter a valid WhatsApp group link', 'error');
+      return;
+    }
+
+    try {
+      const teamRef = doc(db, 'teams', selectedTeamForWhatsApp.id);
+      await updateDoc(teamRef, {
+        whatsappLink: whatsappLinkInput.trim()
+      });
+
+      showToast('WhatsApp group link saved successfully!', 'success');
+      closeWhatsAppModal();
+    } catch (error) {
+      console.error('Error saving WhatsApp link:', error);
+      showToast('Failed to save WhatsApp link. Please try again.', 'error');
     }
   };
 
@@ -202,24 +286,56 @@ function ManageTeamsPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Manage My Teams</h1>
-        <p className="text-gray-600 mt-2">Review applications and manage your team members</p>
-        <p className="text-sm text-blue-600 mt-1">
-          {myTeams.length} {myTeams.length === 1 ? 'team' : 'teams'} created
-        </p>
+        <h1 className="text-3xl font-bold text-gray-900">My Teams</h1>
+        <p className="text-gray-600 mt-2">Manage teams you created and view teams you're a member of</p>
+        <div className="flex gap-4 text-sm text-blue-600 mt-1">
+          <span>{myTeams.length} {myTeams.length === 1 ? 'team' : 'teams'} created</span>
+          <span>•</span>
+          <span>{memberTeams.length} {memberTeams.length === 1 ? 'team' : 'teams'} joined</span>
+        </div>
       </div>
 
-      {/* Teams List */}
-      {myTeams.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <div className="text-gray-400 text-6xl mb-4">👥</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No Teams Created Yet</h3>
-          <p className="text-gray-600 mb-6">
-            You haven't created any teams yet. Start a new project and build your team!
-          </p>
-          <a
-            href="/create-team"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
+      {/* Tabs */}
+      <div className="mb-6">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8">
+            <button
+              onClick={() => setActiveTab('created')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'created'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Teams I Created ({myTeams.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('member')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'member'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Teams I'm In ({memberTeams.length})
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      {/* Teams Content */}
+      {activeTab === 'created' ? (
+        // Teams created by user
+        myTeams.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-md p-8 text-center">
+            <div className="text-gray-400 text-6xl mb-4">👥</div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No Teams Created Yet</h3>
+            <p className="text-gray-600 mb-6">
+              You haven't created any teams yet. Start a new project and build your team!
+            </p>
+            <a
+              href="/create-team"
+              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
           >
             Create Your First Team
           </a>
@@ -291,6 +407,59 @@ function ManageTeamsPage() {
               {/* Expanded Details */}
               {expandedTeam === team.id && (
                 <div className="border-t border-gray-200 p-6">
+                  {/* WhatsApp Group Management */}
+                  {activeTab === 'created' && (
+                    <div className="mb-8 bg-green-50 border border-green-200 rounded-lg p-4">
+                      <h4 className="text-lg font-semibold text-green-800 mb-3 flex items-center">
+                        💬 WhatsApp Group
+                      </h4>
+                      {team.whatsappLink ? (
+                        <div>
+                          <p className="text-green-700 mb-3">
+                            ✅ WhatsApp group is set up! New members will get access when accepted.
+                          </p>
+                          <div className="flex items-center gap-3">
+                            <a
+                              href={team.whatsappLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                            >
+                              🔗 Open Group
+                            </a>
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(team.whatsappLink);
+                                showToast('WhatsApp link copied!', 'success');
+                              }}
+                              className="px-4 py-2 bg-green-100 text-green-700 rounded-md hover:bg-green-200"
+                            >
+                              📋 Copy Link
+                            </button>
+                            <button
+                              onClick={() => openWhatsAppModal(team)}
+                              className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
+                            >
+                              ✏️ Edit Link
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-green-700 mb-3">
+                            💡 Create a WhatsApp group and add the link to help team members communicate!
+                          </p>
+                          <button
+                            onClick={() => openWhatsAppModal(team)}
+                            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                          >
+                            📱 Add WhatsApp Group Link
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {/* Applications Section */}
                   {team.applications?.length > 0 ? (
                     <div className="mb-8">
@@ -451,10 +620,141 @@ function ManageTeamsPage() {
             </div>
           ))}
         </div>
+      )
+      ) : (
+        // Teams where user is a member
+        memberTeams.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-md p-8 text-center">
+            <div className="text-gray-400 text-6xl mb-4">👤</div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No Teams Joined Yet</h3>
+            <p className="text-gray-600 mb-6">
+              You haven't been accepted to any teams yet. Browse available teams and apply to join!
+            </p>
+            <a
+              href="/teams"
+              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Browse Teams
+            </a>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {memberTeams.map((team) => (
+              <div key={team.id} className="bg-white rounded-lg shadow-md border-l-4 border-blue-500">
+                {/* Team Header */}
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{team.name || team.title}</h3>
+                      <div className="flex items-center gap-3">
+                        <span className="inline-block bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded">
+                          {team.category}
+                        </span>
+                        <span className="inline-block bg-purple-100 text-purple-800 text-sm px-2 py-1 rounded">
+                          Team Member
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm text-gray-500">
+                        Joined {formatDate(team.members?.find(m => m.userId === currentUser.uid)?.joinedAt || team.createdAt)}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {team.currentMembers}/{team.maxMembers || team.teamSize} members
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-600 mb-4">{team.description}</p>
+
+                  {/* Tech Stack */}
+                  {(team.techStack || team.skillsNeeded) && (
+                    <div className="mb-4">
+                      <h4 className="text-sm font-medium text-gray-700 mb-2">Tech Stack:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {(team.techStack || team.skillsNeeded)?.map((tech, index) => (
+                          <span key={index} className="bg-gray-100 text-gray-700 text-sm px-2 py-1 rounded">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Team Members */}
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Team Members:</h4>
+                    <div className="space-y-2">
+                      {team.members?.map((member, index) => (
+                        <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded">
+                          <div>
+                            <span className="font-medium text-gray-900">{member.name}</span>
+                            <span className="text-sm text-gray-500 ml-2">({member.role})</span>
+                            {member.userId === currentUser.uid && (
+                              <span className="text-xs text-blue-600 ml-2">(You)</span>
+                            )}
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {member.skills?.slice(0, 3).map((skill, skillIndex) => (
+                              <span key={skillIndex} className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">
+                                {skill}
+                              </span>
+                            ))}
+                            {member.skills?.length > 3 && (
+                              <span className="text-xs text-gray-500">+{member.skills.length - 3} more</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* WhatsApp Group Access */}
+                  {team.whatsappLink && (
+                    <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4">
+                      <h4 className="text-sm font-medium text-green-800 mb-2 flex items-center">
+                        💬 Team WhatsApp Group
+                      </h4>
+                      <p className="text-green-700 text-sm mb-3">
+                        Join the team's WhatsApp group to collaborate and stay updated!
+                      </p>
+                      <div className="flex gap-2">
+                        <a
+                          href={team.whatsappLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 flex items-center gap-2"
+                        >
+                          📱 Join WhatsApp Group
+                        </a>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(team.whatsappLink);
+                            showToast('WhatsApp link copied!', 'success');
+                          }}
+                          className="px-4 py-2 bg-green-100 text-green-700 text-sm rounded-md hover:bg-green-200"
+                        >
+                          📋 Copy Link
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Contact Team Lead */}
+                  <div className="pt-4 border-t border-gray-200">
+                    <p className="text-sm text-gray-600">
+                      Team Lead: <span className="font-medium">{team.members?.find(m => m.role === 'Team Lead')?.name}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )
       )}
 
       {/* Quick Actions */}
-      {myTeams.length > 0 && (
+      {(myTeams.length > 0 || memberTeams.length > 0) && (
         <div className="mt-8 bg-gray-50 rounded-lg p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
           <div className="grid md:grid-cols-3 gap-4">
@@ -479,6 +779,52 @@ function ManageTeamsPage() {
               <h4 className="font-medium text-gray-900 mb-2">📊 Dashboard</h4>
               <p className="text-sm text-gray-600">Back to overview</p>
             </a>
+          </div>
+        </div>
+      )}
+
+      {/* WhatsApp Group Link Modal */}
+      {showWhatsAppModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold mb-4">
+              📱 Add WhatsApp Group Link
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Paste your WhatsApp group invitation link below. Team members will be able to join the group when they're accepted.
+            </p>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                WhatsApp Group Link
+              </label>
+              <input
+                type="url"
+                value={whatsappLinkInput}
+                onChange={(e) => setWhatsappLinkInput(e.target.value)}
+                placeholder="https://chat.whatsapp.com/..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+
+            <div className="text-xs text-gray-500 mb-4">
+              💡 To create a WhatsApp group: Open WhatsApp → New Group → Add members → Group Info → Invite to Group via Link → Copy Link
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={closeWhatsAppModal}
+                className="flex-1 px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveWhatsAppLink}
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                Save Link
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
 
 function CreateTeamPage() {
   const { currentUser, userProfile } = useAuth();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -15,7 +17,8 @@ function CreateTeamPage() {
     skillsNeeded: [],
     teamSize: 3,
     tags: [],
-    requirements: ''
+    requirements: '',
+    whatsappLink: ''
   });
   
   const [currentSkill, setCurrentSkill] = useState('');
@@ -121,6 +124,7 @@ function CreateTeamPage() {
         currentMembers: 1,
         tags: formData.tags,
         requirements: formData.requirements,
+        whatsappLink: formData.whatsappLink,
         status: 'recruiting',
         createdBy: currentUser.uid,
         createdAt: new Date(),
@@ -139,14 +143,14 @@ function CreateTeamPage() {
       const docRef = await addDoc(collection(db, 'teams'), teamData);
       console.log('Team created with ID:', docRef.id);
       
-      setMessage('Team created successfully!');
+      showToast(`Team "${formData.title}" created successfully! 🎉`, 'success');
       setTimeout(() => {
         navigate('/teams');
-      }, 2000);
+      }, 1500);
       
     } catch (error) {
       console.error('Error creating team:', error);
-      setMessage('Error creating team. Please try again.');
+      showToast('Error creating team. Please try again.', 'error');
     } finally {
       setLoading(false);
     }
@@ -350,6 +354,24 @@ function CreateTeamPage() {
               placeholder="Any specific requirements, time commitments, or expectations for team members..."
               className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             />
+          </div>
+
+          {/* WhatsApp Group Link */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              WhatsApp Group Link (optional)
+            </label>
+            <input
+              type="url"
+              name="whatsappLink"
+              value={formData.whatsappLink}
+              onChange={handleInputChange}
+              placeholder="https://chat.whatsapp.com/..."
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            />
+            <p className="text-sm text-gray-500 mt-1">
+              💡 Create a WhatsApp group for your team and paste the invite link here. Accepted members will get access to join.
+            </p>
           </div>
 
           {/* Message */}

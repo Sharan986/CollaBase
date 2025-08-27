@@ -1,8 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { NotificationProvider } from './contexts/NotificationContext';
+import { ToastProvider } from './contexts/ToastContext';
+import { ApplicationProvider } from './contexts/ApplicationContext';
+import { DashboardNotificationProvider } from './contexts/DashboardNotificationContext';
 import Layout from './layouts/Layout';
+import ToastContainer from './components/ToastContainer';
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
@@ -10,7 +13,7 @@ import TeamsPage from './pages/TeamsPage';
 import ApplicationsPage from './pages/ApplicationsPage';
 import CreateTeamPage from './pages/CreateTeamPage';
 import ManageTeamsPage from './pages/ManageTeamsPage';
-import NotificationsPage from './pages/NotificationsPage';
+import TeamDetailsPage from './pages/TeamDetailsPage';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -79,10 +82,10 @@ function AppRoutes() {
             } 
           />
           <Route 
-            path="/notifications" 
+            path="/team/:teamId" 
             element={
               <ProtectedRoute>
-                <NotificationsPage />
+                <TeamDetailsPage />
               </ProtectedRoute>
             } 
           />
@@ -96,9 +99,14 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-      <NotificationProvider>
-        <AppRoutes />
-      </NotificationProvider>
+      <ToastProvider>
+        <ApplicationProvider>
+          <DashboardNotificationProvider>
+            <AppRoutes />
+            <ToastContainer />
+          </DashboardNotificationProvider>
+        </ApplicationProvider>
+      </ToastProvider>
     </AuthProvider>
   );
 }

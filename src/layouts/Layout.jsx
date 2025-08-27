@@ -1,7 +1,6 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import NotificationDropdown from '../components/common/NotificationDropdown';
 
 function Navbar() {
   const { currentUser, userProfile, logout } = useAuth();
@@ -41,11 +40,8 @@ function Navbar() {
                 Create Team
               </Link>
               <Link to="/manage-teams" className="text-gray-700 hover:text-gray-900 font-medium">
-                Manage Teams
+                My Teams
               </Link>
-              
-              {/* Notification Dropdown */}
-              <NotificationDropdown />
               
               <div className="flex items-center space-x-4">
                 <span className="text-gray-700">Welcome, {userProfile.name}</span>

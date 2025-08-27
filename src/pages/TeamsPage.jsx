@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
+import { useDashboardNotifications } from '../contexts/DashboardNotificationContext';
+import { useNavigate } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 
 function TeamsPage() {
   const { currentUser, userProfile, applyToTeam } = useAuth();
+  const { showToast } = useToast();
+  const { createDashboardNotification } = useDashboardNotifications();
+  const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
   const [filteredTeams, setFilteredTeams] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -119,7 +125,7 @@ function TeamsPage() {
     // Check if application is pending
     const hasApplied = (team.applications || []).includes(currentUser.uid);
     if (hasApplied) {
-      return { text: 'Application Pending', disabled: true, className: 'bg-yellow-500 cursor-not-allowed' };
+      return { text: 'View Application', disabled: false, className: 'bg-yellow-500 hover:bg-yellow-600' };
     }
 
     // Check if currently applying
@@ -136,6 +142,24 @@ function TeamsPage() {
       setApplyingTeams(prev => new Set([...prev, teamId]));
       await applyToTeam(teamId);
       
+      // Find team for notifications
+      const team = teams.find(t => t.id === teamId);
+      const teamName = team?.title || 'team';
+      
+      // Create dashboard notification for team owner
+      if (team?.createdBy) {
+        await createDashboardNotification(
+          team.createdBy,
+          'new_application',
+          teamId,
+          teamName,
+          `${userProfile.name} has applied to join "${teamName}". Review their application in My Teams.`
+        );
+      }
+      
+      // Show success toast
+      showToast(`Application sent to ${teamName}! 🎉`, 'success');
+      
       // Update the team in local state to reflect the application
       setTeams(prevTeams => prevTeams.map(team => 
         team.id === teamId 
@@ -148,7 +172,7 @@ function TeamsPage() {
       
     } catch (error) {
       console.error('Error applying to team:', error);
-      alert(error.message);
+      showToast(error.message, 'error');
     } finally {
       setApplyingTeams(prev => {
         const newSet = new Set(prev);
@@ -156,6 +180,25 @@ function TeamsPage() {
         return newSet;
       });
     }
+  };
+
+  const handleButtonClick = (team) => {
+    const buttonState = getButtonState(team);
+    
+    // If user has already applied, redirect to applications page
+    if (buttonState.text === 'View Application') {
+      showToast('Redirecting to your applications...', 'info');
+      navigate('/applications');
+      return;
+    }
+    
+    // If button is disabled or user is applying, do nothing
+    if (buttonState.disabled) {
+      return;
+    }
+    
+    // Otherwise, apply to the team
+    handleApplyToTeam(team.id);
   };
 
   const clearFilters = () => {
@@ -362,7 +405,7 @@ function TeamsPage() {
 
                 {/* Join Button */}
                 <button
-                  onClick={() => !buttonState.disabled && handleApplyToTeam(team.id)}
+                  onClick={() => handleButtonClick(team)}
                   disabled={buttonState.disabled}
                   className={`w-full py-2 px-4 rounded-md text-white font-medium transition-colors ${buttonState.className}`}
                 >

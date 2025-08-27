@@ -16,9 +16,7 @@ import {
   where, 
   getDocs,
   arrayRemove,
-  arrayUnion,
-  addDoc,
-  serverTimestamp
+  arrayUnion
 } from 'firebase/firestore';
 import { auth, db } from '../firebase/firebase';
 
@@ -33,26 +31,6 @@ export function AuthProvider({ children }) {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(false);
-
-  // Create notification helper function
-  const createNotification = async (userId, type, title, message, data = {}) => {
-    try {
-      const notification = {
-        userId,
-        type,
-        title,
-        message,
-        data,
-        read: false,
-        createdAt: serverTimestamp()
-      };
-
-      await addDoc(collection(db, 'notifications'), notification);
-      console.log('Notification created:', title);
-    } catch (error) {
-      console.error('Error creating notification:', error);
-    }
-  };
 
   // Enhanced signup function with user profile
   async function signup(email, password, userData) {
@@ -74,14 +52,6 @@ export function AuthProvider({ children }) {
         createdAt: new Date(),
         emailVerified: false
       });
-      
-      // Create welcome notification
-      await createNotification(
-        result.user.uid,
-        'welcome',
-        'Welcome to CollaBase! 🎉',
-        'Start by browsing teams or creating your own project. Connect with fellow students and build amazing things together!'
-      );
       
       console.log('User created with profile:', result.user.email);
       return result;
@@ -122,14 +92,6 @@ export function AuthProvider({ children }) {
         createdAt: new Date(),
         emailVerified: currentUser.emailVerified
       });
-      
-      // Create welcome notification
-      await createNotification(
-        currentUser.uid,
-        'welcome',
-        'Profile Setup Complete! 🎉',
-        'Your profile is now ready. Start exploring teams and projects that match your skills!'
-      );
       
       // Refresh user profile
       const profile = await getUserProfile(currentUser.uid);
@@ -206,24 +168,6 @@ export function AuthProvider({ children }) {
       await updateDoc(teamRef, {
         applications: [...currentApplications, currentUser.uid]
       });
-
-      // Create notification for team owner
-      await createNotification(
-        teamData.createdBy,
-        'application_received',
-        'New Team Application! 📝',
-        `${userProfile.name} has applied to join your team "${teamData.title}". Review their profile and skills to make a decision.`,
-        { teamId, teamTitle: teamData.title, applicantId: currentUser.uid, applicantName: userProfile.name }
-      );
-
-      // Create notification for applicant
-      await createNotification(
-        currentUser.uid,
-        'application_sent',
-        'Application Sent! ✅',
-        `Your application to join "${teamData.title}" has been sent. The team lead will review your profile and get back to you soon.`,
-        { teamId, teamTitle: teamData.title }
-      );
       
       console.log('Applied to team successfully');
       return true;
@@ -291,8 +235,7 @@ export function AuthProvider({ children }) {
     login,
     logout,
     applyToTeam,
-    getUserApplications,
-    createNotification
+    getUserApplications
   };
 
   return (

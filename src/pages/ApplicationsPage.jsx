@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { collection, query, where, getDocs, doc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 
 function ApplicationsPage() {
   const { currentUser, getUserApplications } = useAuth();
+  const { showToast } = useToast();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
@@ -42,10 +44,13 @@ function ApplicationsPage() {
       // Remove from local state
       setApplications(prev => prev.filter(app => app.id !== teamId));
       
+      // Show success toast
+      showToast(`Application to "${teamTitle}" withdrawn successfully`, 'info');
+      
       console.log(`Withdrew application from ${teamTitle}`);
     } catch (error) {
       console.error('Error withdrawing application:', error);
-      alert('Failed to withdraw application. Please try again.');
+      showToast('Failed to withdraw application. Please try again.', 'error');
     } finally {
       setActionLoading(null);
     }
