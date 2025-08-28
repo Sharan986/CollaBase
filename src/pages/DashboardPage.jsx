@@ -7,6 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { Link } from 'react-router-dom';
 
+
 function DashboardPage() {
   const { currentUser, userProfile } = useAuth();
   const { applications, loading: applicationsLoading } = useApplications();
@@ -58,11 +59,16 @@ function DashboardPage() {
     return <div className="text-center p-8">Loading...</div>;
   }
 
+
+
+
+
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Welcome back, {userProfile.name}! 👋</h1>
-        <p className="text-gray-600 mt-2">Here's what's happening in your CollaBase community</p>
+      <>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">Welcome back, {userProfile.name}! 👋</h1>
+            <p className="text-gray-600 mt-2">Here's what's happening in your CollaBase community</p>
       </div>
 
       {/* Dashboard Notifications */}
@@ -254,6 +260,7 @@ function DashboardPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

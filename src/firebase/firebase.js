@@ -21,11 +21,25 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
-// Initialize Firebase services
+// Initialize Analytics conditionally (it's optional and can fail)
+let analytics = null;
+try {
+  // Only initialize if measurementId exists and browser supports it
+  if (firebaseConfig.measurementId && typeof window !== 'undefined') {
+    analytics = getAnalytics(app);
+    console.log('✅ Firebase Analytics initialized successfully');
+  } else {
+    console.log('ℹ️ Firebase Analytics skipped (measurementId missing or not in browser environment)');
+  }
+} catch (error) {
+  console.warn('⚠️ Firebase Analytics initialization failed (this is normal and won\'t affect app functionality):', error.message);
+}
+
+// Initialize Firebase services (these are required)
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+export { analytics };
 
 export default app;

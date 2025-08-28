@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 
+
 function TeamsPage() {
   const { currentUser, userProfile, applyToTeam } = useAuth();
   const { showToast } = useToast();
