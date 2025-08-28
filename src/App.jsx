@@ -15,12 +15,13 @@ import ApplicationsPage from './pages/ApplicationsPage';
 import CreateTeamPage from './pages/CreateTeamPage';
 import ManageTeamsPage from './pages/ManageTeamsPage';
 import TeamDetailsPage from './pages/TeamDetailsPage';
+import FAQPage from './pages/FAQPage';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
-  const { currentUser, userProfile, loading } = useAuth();
+  const { currentUser, userProfile, loading, profileLoading } = useAuth();
   
-  if (loading) {
+  if (loading || profileLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -28,7 +29,13 @@ function ProtectedRoute({ children }) {
     );
   }
   
-  if (!currentUser || !userProfile) {
+  // Check if user is authenticated
+  if (!currentUser) {
+    return <Navigate to="/auth" replace />;
+  }
+  
+  // Check if user profile exists and has required fields
+  if (!userProfile || !userProfile.name || !userProfile.year || !userProfile.branch) {
     return <Navigate to="/auth" replace />;
   }
   
@@ -42,6 +49,7 @@ function AppRoutes() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/faqs" element={<FAQPage />} />
           <Route 
             path="/dashboard" 
             element={

@@ -25,9 +25,26 @@ function AuthPage() {
     }
   }, []);
 
-  // Redirect if user is already logged in with profile
-  if (currentUser && userProfile && !loading) {
+  // Redirect if user is already logged in with complete profile
+  if (currentUser && userProfile && userProfile.name && userProfile.year && userProfile.branch && !loading && !profileLoading) {
     return <Navigate to="/dashboard" replace />;
+  }
+
+  // Show profile setup if user is logged in but profile is incomplete
+  if (currentUser && !profileLoading && (!userProfile || !userProfile.name || !userProfile.year || !userProfile.branch)) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/50 p-8">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-blue-800 bg-clip-text text-transparent">
+              Complete Your Profile
+            </h2>
+            <p className="text-slate-600 mt-2">Please complete your profile to continue</p>
+          </div>
+          <ProfileSetup onProfileComplete={handleProfileComplete} />
+        </div>
+      </div>
+    );
   }
 
   async function handleSignup() {

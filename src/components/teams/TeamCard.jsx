@@ -5,6 +5,7 @@ function TeamCard({ team, onTeamUpdate }) {
   const { currentUser, applyToTeam } = useAuth();
   const [isApplying, setIsApplying] = useState(false);
   const [applicationStatus, setApplicationStatus] = useState(null);
+  const [skillsModal, setSkillsModal] = useState({ isOpen: false, skills: [], teamTitle: '' });
   
   const spotsRemaining = team.teamSize - team.currentMembers;
   const isTeamFull = spotsRemaining <= 0;
@@ -84,15 +85,25 @@ function TeamCard({ team, onTeamUpdate }) {
       <div className="mb-4">
         <h4 className="text-sm font-medium text-gray-700 mb-2">Skills Needed:</h4>
         <div className="flex flex-wrap gap-2">
-          {team.skillsNeeded.slice(0, 4).map((skill, index) => (
-            <span key={index} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+          {team.skillsNeeded.slice(0, 2).map((skill, index) => (
+            <span key={index} className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium border border-purple-200">
               {skill}
             </span>
           ))}
-          {team.skillsNeeded.length > 4 && (
-            <span className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
-              +{team.skillsNeeded.length - 4} more
-            </span>
+          {team.skillsNeeded.length > 2 && (
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                setSkillsModal({
+                  isOpen: true,
+                  skills: team.skillsNeeded,
+                  teamTitle: team.title || 'Untitled Project'
+                });
+              }}
+              className="text-slate-500 text-xs bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-full border border-slate-200 transition-colors cursor-pointer"
+            >
+              +{team.skillsNeeded.length - 2} more
+            </button>
           )}
         </div>
       </div>
@@ -164,6 +175,51 @@ function TeamCard({ team, onTeamUpdate }) {
           </button>
         )}
       </div>
+      
+      {/* Skills Modal */}
+      {skillsModal.isOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 max-w-md w-full max-h-[80vh] overflow-hidden">
+            {/* Modal Header */}
+            <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-100 border-b border-white/20">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold text-slate-800">All Skills Required</h3>
+                <button
+                  onClick={() => setSkillsModal({ isOpen: false, skills: [], teamTitle: '' })}
+                  className="w-8 h-8 bg-slate-200 hover:bg-slate-300 rounded-full flex items-center justify-center transition-colors"
+                >
+                  <span className="text-slate-600 text-lg">×</span>
+                </button>
+              </div>
+              <p className="text-sm text-slate-600 mt-2">{skillsModal.teamTitle}</p>
+            </div>
+            
+            {/* Modal Content */}
+            <div className="p-6 max-h-[60vh] overflow-y-auto">
+              <div className="flex flex-wrap gap-3">
+                {skillsModal.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 text-sm px-4 py-2 rounded-full font-medium border border-purple-200 shadow-sm"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            {/* Modal Footer */}
+            <div className="p-6 bg-slate-50 border-t border-slate-200">
+              <button
+                onClick={() => setSkillsModal({ isOpen: false, skills: [], teamTitle: '' })}
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-200"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
