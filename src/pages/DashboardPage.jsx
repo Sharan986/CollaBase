@@ -6,6 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { Link } from 'react-router-dom';
 
+
 function DashboardPage() {
   const { currentUser, userProfile } = useAuth();
   const { notifications, dismissNotification, dismissAllNotifications, loading: notificationsLoading } = useDashboardNotifications();
@@ -62,6 +63,10 @@ function DashboardPage() {
   if (!currentUser || !userProfile) {
     return <div className="text-center p-8">Loading...</div>;
   }
+
+
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -257,6 +262,7 @@ function DashboardPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
