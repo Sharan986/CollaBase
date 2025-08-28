@@ -9,6 +9,7 @@ import ToastContainer from './components/ToastContainer';
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
+import ProfilePage from './pages/ProfilePage';
 import TeamsPage from './pages/TeamsPage';
 import ApplicationsPage from './pages/ApplicationsPage';
 import CreateTeamPage from './pages/CreateTeamPage';
@@ -46,6 +47,14 @@ function AppRoutes() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             } 
           />

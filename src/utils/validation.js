@@ -1,10 +1,11 @@
 // List of common college email domains
 const collegeEmailDomains = [
-  'edu',
-  'ac.in',
-  'student.ac.in',
-  'stu.ac.in',
-  'edu.in'
+  // 'edu',
+  // 'ac.in',
+  // 'student.ac.in',
+  // 'stu.ac.in',
+  // 'edu.in'
+  'aju.ac.in'
 ];
 
 export function isCollegeEmail(email) {
@@ -13,10 +14,11 @@ export function isCollegeEmail(email) {
   
   // Check if it's a college email
   return collegeEmailDomains.some(collegeDomain => 
-    domain.endsWith(collegeDomain) || 
-    domain.includes('.edu') ||
-    domain.includes('university') ||
-    domain.includes('college')
+    domain.endsWith(collegeDomain) 
+    // || 
+    // domain.includes('.edu') ||
+    // domain.includes('university') ||
+    // domain.includes('college')
   );
 }
 

@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendEmailVerification,
+  sendPasswordResetEmail,
   onAuthStateChanged
 } from 'firebase/auth';
 import { 
@@ -106,6 +107,35 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // Update user profile
+  async function updateUserProfile(userData) {
+    try {
+      if (!currentUser) throw new Error('No user logged in');
+      
+      setProfileLoading(true);
+      
+      await updateDoc(doc(db, 'users', currentUser.uid), {
+        name: userData.name,
+        year: userData.year,
+        branch: userData.branch,
+        skills: userData.skills || [],
+        interests: userData.interests || [],
+        updatedAt: new Date()
+      });
+      
+      // Refresh user profile
+      const profile = await getUserProfile(currentUser.uid);
+      setUserProfile(profile);
+      setProfileLoading(false);
+      
+      console.log('Profile updated for user:', currentUser.email);
+    } catch (error) {
+      console.error('Error updating profile:', error.message);
+      setProfileLoading(false);
+      throw error;
+    }
+  }
+
   // Login function
   async function login(email, password) {
     try {
@@ -125,6 +155,17 @@ export function AuthProvider({ children }) {
       console.log('User logged out');
     } catch (error) {
       console.error('Logout error:', error.message);
+      throw error;
+    }
+  }
+
+  // Reset password function
+  async function resetPassword(email) {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      console.log('Password reset email sent to:', email);
+    } catch (error) {
+      console.error('Password reset error:', error.message);
       throw error;
     }
   }
@@ -232,8 +273,10 @@ export function AuthProvider({ children }) {
     signup,
     createAccount,
     addUserProfile,
+    updateUserProfile,
     login,
     logout,
+    resetPassword,
     applyToTeam,
     getUserApplications
   };
