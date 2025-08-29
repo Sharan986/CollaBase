@@ -157,19 +157,34 @@ function CreateTeamPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Create New Team</h1>
-        <p className="text-gray-600 mt-2">Start a new project and recruit talented teammates</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-24">
+      {/* Background Decorations */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-1/4 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
+        <div className="absolute bottom-20 right-1/4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-500"></div>
       </div>
 
-      {/* Form */}
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Modern Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl shadow-2xl mb-6">
+            <span className="text-3xl">✨</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-slate-800 via-green-800 to-emerald-900 bg-clip-text text-transparent leading-tight">
+            Create New Team
+          </h1>
+          <p className="text-slate-600 text-lg max-w-2xl mx-auto mt-4 leading-relaxed">
+            Start an amazing project and recruit talented teammates to bring your vision to life
+          </p>
+        </div>
+
+        {/* Modern Form */}
+        <div className="bg-white/70 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl p-8 lg:p-12">
+          <form onSubmit={handleSubmit} className="space-y-8">
           {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-slate-700 uppercase tracking-wide">
               Project Title *
             </label>
             <input
@@ -178,14 +193,14 @@ function CreateTeamPage() {
               value={formData.title}
               onChange={handleInputChange}
               placeholder="e.g., AI-Powered Study Assistant"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-4 bg-white/50 border border-white/30 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 backdrop-blur-sm transition-all duration-200 text-slate-800 placeholder-slate-400"
               required
             />
           </div>
 
           {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-slate-700 uppercase tracking-wide">
               Project Description *
             </label>
             <textarea
@@ -194,18 +209,18 @@ function CreateTeamPage() {
               onChange={handleInputChange}
               rows={4}
               placeholder="Describe your project, its goals, and what you're trying to build..."
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-4 bg-white/50 border border-white/30 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 backdrop-blur-sm transition-all duration-200 text-slate-800 placeholder-slate-400 resize-none"
               required
             />
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               {formData.description.length}/500 characters
             </p>
           </div>
 
           {/* Category and Team Size */}
           <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-slate-700 uppercase tracking-wide">
                 Category *
               </label>
               <select
@@ -386,17 +401,17 @@ function CreateTeamPage() {
           )}
 
           {/* Submit Button */}
-          <div className="flex gap-4">
+          <div className="flex gap-4 pt-4">
             <button
               type="submit"
               disabled={loading}
-              className={`flex-1 py-3 px-6 rounded-md font-medium transition-colors ${
+              className={`flex-1 py-4 px-8 rounded-2xl font-semibold transition-all duration-200 shadow-lg ${
                 loading
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700'
+                  ? 'bg-slate-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transform hover:scale-105'
               } text-white`}
             >
-              {loading ? 'Creating Team...' : 'Create Team'}
+              {loading ? 'Creating Team...' : '✨ Create Amazing Team'}
             </button>
             <button
               type="button"
@@ -431,6 +446,7 @@ function CreateTeamPage() {
           </li>
         </ul>
       </div>
+    </div>
     </div>
   );
 }

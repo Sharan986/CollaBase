@@ -283,115 +283,138 @@ function ManageTeamsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My Teams</h1>
-        <p className="text-gray-600 mt-2">Manage teams you created and view teams you're a member of</p>
-        <div className="flex gap-4 text-sm text-blue-600 mt-1">
-          <span>{myTeams.length} {myTeams.length === 1 ? 'team' : 'teams'} created</span>
-          <span>•</span>
-          <span>{memberTeams.length} {memberTeams.length === 1 ? 'team' : 'teams'} joined</span>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-24">
+      {/* Background Decorations */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-1/4 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
+        <div className="absolute bottom-20 right-1/4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-500"></div>
       </div>
 
-      {/* Tabs */}
-      <div className="mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Modern Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl shadow-2xl mb-6">
+            <span className="text-3xl">👥</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-900 bg-clip-text text-transparent leading-tight">
+            My Teams
+          </h1>
+          <p className="text-slate-600 text-lg max-w-2xl mx-auto mt-4 leading-relaxed">
+            Manage teams you created and collaborate on projects you've joined
+          </p>
+          <div className="flex justify-center gap-6 text-sm text-slate-600 mt-4">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+              <span>{myTeams.length} {myTeams.length === 1 ? 'team' : 'teams'} created</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+              <span>{memberTeams.length} {memberTeams.length === 1 ? 'team' : 'teams'} joined</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Modern Tabs */}
+        <div className="mb-8">
+          <div className="bg-white/70 backdrop-blur-lg border border-white/20 rounded-2xl shadow-xl p-2 inline-flex">
             <button
               onClick={() => setActiveTab('created')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 ${
                 activeTab === 'created'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
+                  : 'text-slate-700 hover:bg-white/50'
               }`}
             >
               Teams I Created ({myTeams.length})
             </button>
             <button
               onClick={() => setActiveTab('member')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 ${
                 activeTab === 'member'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
+                  : 'text-slate-700 hover:bg-white/50'
               }`}
             >
               Teams I'm In ({memberTeams.length})
             </button>
-          </nav>
+          </div>
         </div>
-      </div>
 
       {/* Teams Content */}
       {activeTab === 'created' ? (
         // Teams created by user
         myTeams.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-md p-8 text-center">
-            <div className="text-gray-400 text-6xl mb-4">👥</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Teams Created Yet</h3>
-            <p className="text-gray-600 mb-6">
-              You haven't created any teams yet. Start a new project and build your team!
+          <div className="bg-white/70 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl p-12 text-center">
+            <div className="w-20 h-20 bg-gradient-to-r from-slate-400 to-slate-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <span className="text-3xl">👥</span>
+            </div>
+            <h3 className="text-2xl font-bold text-slate-800 mb-3">No Teams Created Yet</h3>
+            <p className="text-slate-600 mb-8 max-w-md mx-auto leading-relaxed">
+              You haven't created any teams yet. Start a new project and build your amazing team!
             </p>
             <a
               href="/create-team"
-              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Create Your First Team
-          </a>
-        </div>
+              className="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+            >
+              Create Your First Team
+            </a>
+          </div>
       ) : (
         <div className="space-y-6">
           {myTeams.map((team) => (
-            <div key={team.id} className="bg-white rounded-lg shadow-md border-l-4 border-green-500">
+            <div key={team.id} className="group bg-white/70 backdrop-blur-lg rounded-3xl overflow-hidden shadow-2xl border border-white/50 hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-1">
               {/* Team Header */}
-              <div className="p-6">
+              <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-100 border-b border-white/20">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{team.title}</h3>
-                    <div className="flex items-center gap-3">
-                      <span className="inline-block bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded">
+                    <h3 className="text-xl font-bold text-slate-800 mb-3">{team.title}</h3>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg">
                         {team.category}
                       </span>
-                      <span className="inline-block bg-green-100 text-green-800 text-sm px-2 py-1 rounded">
+                      <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg">
                         Your Team
                       </span>
                       {team.applications?.length > 0 && (
-                        <span className="inline-block bg-red-100 text-red-800 text-sm px-2 py-1 rounded">
+                        <span className="bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg animate-pulse">
                           {team.applications.length} New Applications
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm text-gray-500">
+                    <div className="text-xs text-slate-500">
                       Created {formatDate(team.createdAt)}
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm font-semibold text-slate-700">
                       {team.currentMembers}/{team.teamSize} members
                     </div>
                   </div>
                 </div>
 
-                <p className="text-gray-600 mb-4">{team.description}</p>
+                <p className="text-slate-600 mb-4 text-sm leading-relaxed">{team.description}</p>
+              </div>
 
+              {/* Team Content */}
+              <div className="p-6">
                 {/* Quick Stats */}
-                <div className="grid md:grid-cols-4 gap-4 mb-4">
-                  <div className="bg-blue-50 p-3 rounded">
-                    <div className="text-lg font-semibold text-blue-600">{team.applications?.length || 0}</div>
-                    <div className="text-sm text-blue-800">Pending Applications</div>
+                <div className="grid md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-2xl border border-blue-200">
+                    <div className="text-lg font-bold text-blue-600">{team.applications?.length || 0}</div>
+                    <div className="text-xs text-blue-700 font-medium">Pending Applications</div>
                   </div>
-                  <div className="bg-green-50 p-3 rounded">
-                    <div className="text-lg font-semibold text-green-600">{team.currentMembers}</div>
-                    <div className="text-sm text-green-800">Current Members</div>
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-2xl border border-green-200">
+                    <div className="text-lg font-bold text-green-600">{team.currentMembers}</div>
+                    <div className="text-xs text-green-700 font-medium">Current Members</div>
                   </div>
-                  <div className="bg-yellow-50 p-3 rounded">
-                    <div className="text-lg font-semibold text-yellow-600">{team.teamSize - team.currentMembers}</div>
-                    <div className="text-sm text-yellow-800">Spots Remaining</div>
+                  <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-2xl border border-yellow-200">
+                    <div className="text-lg font-bold text-yellow-600">{team.teamSize - team.currentMembers}</div>
+                    <div className="text-xs text-yellow-700 font-medium">Spots Remaining</div>
                   </div>
-                  <div className="bg-purple-50 p-3 rounded">
-                    <div className="text-lg font-semibold text-purple-600">{team.skillsNeeded.length}</div>
-                    <div className="text-sm text-purple-800">Skills Needed</div>
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-2xl border border-purple-200">
+                    <div className="text-lg font-bold text-purple-600">{team.skillsNeeded.length}</div>
+                    <div className="text-xs text-purple-700 font-medium">Skills Needed</div>
                   </div>
                 </div>
 
@@ -624,15 +647,17 @@ function ManageTeamsPage() {
       ) : (
         // Teams where user is a member
         memberTeams.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-md p-8 text-center">
-            <div className="text-gray-400 text-6xl mb-4">👤</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Teams Joined Yet</h3>
-            <p className="text-gray-600 mb-6">
-              You haven't been accepted to any teams yet. Browse available teams and apply to join!
+          <div className="bg-white/70 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl p-12 text-center">
+            <div className="w-20 h-20 bg-gradient-to-r from-purple-400 to-purple-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <span className="text-3xl">👤</span>
+            </div>
+            <h3 className="text-2xl font-bold text-slate-800 mb-3">No Teams Joined Yet</h3>
+            <p className="text-slate-600 mb-8 max-w-md mx-auto leading-relaxed">
+              You haven't been accepted to any teams yet. Browse available teams and apply to join amazing projects!
             </p>
             <a
               href="/teams"
-              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
+              className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
               Browse Teams
             </a>
@@ -640,40 +665,43 @@ function ManageTeamsPage() {
         ) : (
           <div className="space-y-6">
             {memberTeams.map((team) => (
-              <div key={team.id} className="bg-white rounded-lg shadow-md border-l-4 border-blue-500">
+              <div key={team.id} className="group bg-white/70 backdrop-blur-lg rounded-3xl overflow-hidden shadow-2xl border border-white/50 hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-1">
                 {/* Team Header */}
-                <div className="p-6">
+                <div className="p-6 bg-gradient-to-br from-purple-50 to-indigo-100 border-b border-white/20">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{team.name || team.title}</h3>
-                      <div className="flex items-center gap-3">
-                        <span className="inline-block bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded">
+                      <h3 className="text-xl font-bold text-slate-800 mb-3">{team.name || team.title}</h3>
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg">
                           {team.category}
                         </span>
-                        <span className="inline-block bg-purple-100 text-purple-800 text-sm px-2 py-1 rounded">
+                        <span className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg">
                           Team Member
                         </span>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm text-gray-500">
+                      <div className="text-xs text-slate-500">
                         Joined {formatDate(team.members?.find(m => m.userId === currentUser.uid)?.joinedAt || team.createdAt)}
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm font-semibold text-slate-700">
                         {team.currentMembers}/{team.maxMembers || team.teamSize} members
                       </div>
                     </div>
                   </div>
 
-                  <p className="text-gray-600 mb-4">{team.description}</p>
+                  <p className="text-slate-600 mb-4 text-sm leading-relaxed">{team.description}</p>
+                </div>
 
+                {/* Team Content */}
+                <div className="p-6">
                   {/* Tech Stack */}
                   {(team.techStack || team.skillsNeeded) && (
-                    <div className="mb-4">
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Tech Stack:</h4>
+                    <div className="mb-6">
+                      <h4 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Tech Stack:</h4>
                       <div className="flex flex-wrap gap-2">
                         {(team.techStack || team.skillsNeeded)?.map((tech, index) => (
-                          <span key={index} className="bg-gray-100 text-gray-700 text-sm px-2 py-1 rounded">
+                          <span key={index} className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium border border-purple-200">
                             {tech}
                           </span>
                         ))}
@@ -682,14 +710,14 @@ function ManageTeamsPage() {
                   )}
 
                   {/* Team Members */}
-                  <div className="mb-4">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Team Members:</h4>
-                    <div className="space-y-2">
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">Team Members:</h4>
+                    <div className="space-y-3">
                       {team.members?.map((member, index) => (
-                        <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded">
+                        <div key={index} className="flex items-center justify-between bg-gradient-to-r from-slate-50 to-slate-100 p-4 rounded-2xl border border-slate-200">
                           <div>
-                            <span className="font-medium text-gray-900">{member.name}</span>
-                            <span className="text-sm text-gray-500 ml-2">({member.role})</span>
+                            <span className="font-semibold text-slate-800">{member.name}</span>
+                            <span className="text-sm text-slate-600 ml-2">({member.role})</span>
                             {member.userId === currentUser.uid && (
                               <span className="text-xs text-blue-600 ml-2">(You)</span>
                             )}
@@ -828,6 +856,7 @@ function ManageTeamsPage() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { useDashboardNotifications } from '../contexts/DashboardNotificationContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 
@@ -15,10 +15,18 @@ function TeamsPage() {
   const [teams, setTeams] = useState([]);
   const [filteredTeams, setFilteredTeams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSkill, setSelectedSkill] = useState('');
   const [applyingTeams, setApplyingTeams] = useState(new Set());
+  
+  // Skills Modal State
+  const [skillsModal, setSkillsModal] = useState({
+    isOpen: false,
+    skills: [],
+    teamTitle: ''
+  });
 
   const categories = [
     'Web App',
@@ -63,6 +71,7 @@ function TeamsPage() {
         console.error('Error fetching teams:', error);
       } finally {
         setLoading(false);
+        setInitialLoad(false);
       }
     }
 
@@ -210,35 +219,46 @@ function TeamsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/50 p-12 text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-6 animate-pulse">
-            <span className="text-2xl">🔍</span>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center pt-24">
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 p-12 text-center max-w-md mx-auto">
+          <div className="w-20 h-20 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-6 animate-pulse shadow-2xl">
+            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
           </div>
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500/20 border-t-blue-500 mx-auto mb-6"></div>
-          <p className="text-slate-600 text-lg font-medium">Loading teams...</p>
+          {/* <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500/20 border-t-blue-500 mx-auto mb-6"></div> */}
+          <p className="text-slate-600 text-lg font-medium">Loading projects...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Modern Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl shadow-2xl mb-6">
-            <span className="text-3xl">🔍</span>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-24">
+      {/* Background Decorations */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-1/4 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
+        <div className="absolute bottom-20 right-1/4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-1000"></div>
+        <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-500"></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Enhanced Modern Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-3xl shadow-2xl mb-8 transform hover:scale-105 transition-all duration-300">
+            <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-900 bg-clip-text text-transparent leading-tight">
-            Discover Teams
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-purple-900 bg-clip-text text-transparent leading-tight mb-6">
+            Discover Projects
           </h1>
-          <p className="text-slate-600 text-lg sm:text-xl mt-4 max-w-2xl mx-auto leading-relaxed">
-            Find exciting projects and connect with talented teammates
+          <p className="text-slate-600 text-xl sm:text-2xl mt-4 max-w-3xl mx-auto leading-relaxed font-light">
+            Join exciting teams, collaborate on innovative projects, and bring ideas to life
           </p>
-          <div className="inline-flex items-center bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mt-4">
-            <span className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
-            {filteredTeams.length} {filteredTeams.length === 1 ? 'team' : 'teams'} available
+          <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 border border-blue-200 text-blue-700 px-6 py-3 rounded-full text-lg font-medium mt-6 shadow-lg">
+            <div className="w-3 h-3 bg-blue-500 rounded-full mr-3 animate-pulse"></div>
+            {filteredTeams.length} {filteredTeams.length === 1 ? 'Project Available' : 'Projects Available'}
           </div>
         </div>
 
@@ -362,116 +382,119 @@ function TeamsPage() {
             const buttonState = getButtonState(team);
             
             return (
-              <div key={team.id} className="group bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/50 p-8 hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full">
-                {/* Team Header */}
-                <div className="mb-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold text-slate-800 line-clamp-2 group-hover:text-slate-900 transition-colors duration-300 min-h-[3.5rem] flex items-start">
-                      {team.title || 'Untitled Team'}
-                    </h3>
-                    <span className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs px-3 py-2 rounded-full flex-shrink-0 ml-3 font-medium shadow-lg">
-                      {team.category || 'Other'}
-                    </span>
+              <div key={team.id} className="group bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/60 p-6 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col h-auto min-h-[700px] overflow-visible relative">
+                {/* Animated Background Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                
+                <div className="relative z-10 flex flex-col h-full">
+                  {/* Header Section - Flexible height for title */}
+                  <div className="mb-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className="text-lg font-bold text-slate-800 group-hover:text-slate-900 transition-colors duration-300 leading-tight pr-2 flex-1">
+                        {team.title || 'Untitled Team'}
+                      </h3>
+                      <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 text-white text-xs px-3 py-1 rounded-full flex-shrink-0 font-medium shadow-lg ml-2">
+                        {team.category || 'Other'}
+                      </span>
+                    </div>
                   </div>
-                  <div className="min-h-[4.5rem]">
-                    <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed">
-                      {team.description || 'No description available'}
-                    </p>
-                  </div>
-                </div>
 
-                {/* Team Stats */}
-                <div className="mb-6 grid grid-cols-2 gap-4">
-                  <div className="bg-slate-50/50 rounded-2xl p-4">
-                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Team Size</span>
-                    <p className="text-slate-800 font-bold text-lg">{team.currentMembers || 0}/{team.teamSize || 0}</p>
+                  {/* Description Section - Fixed height for consistency */}
+                  <div className="mb-8 h-24">
+                    <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wide">Description</div>
+                    <div className="h-16 overflow-hidden">
+                      <p className="text-slate-600 text-sm leading-relaxed">
+                        {team.description || 'No description available for this project.'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="bg-slate-50/50 rounded-2xl p-4">
-                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Applications</span>
-                    <p className="text-slate-800 font-bold text-lg">{(team.applications || []).length}</p>
-                  </div>
-                </div>
 
-                {/* Skills Needed */}
-                <div className="mb-6 flex-grow">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 block">Skills Needed</span>
-                  <div className="flex flex-wrap gap-2 items-start">
-                    {(team.skillsNeeded || []).length > 0 ? (
-                      <>
-                        {(team.skillsNeeded || []).slice(0, 3).map((skill, index) => (
-                          <span key={index} className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 text-xs px-3 py-2 rounded-full font-medium whitespace-nowrap">
-                            {skill}
-                          </span>
-                        ))}
-                        {(team.skillsNeeded || []).length > 3 && (
-                          <span className="text-slate-500 text-xs bg-slate-100 px-3 py-2 rounded-full whitespace-nowrap">+{(team.skillsNeeded || []).length - 3} more</span>
-                        )}
-                      </>
-                    ) : (
-                      <span className="text-sm text-slate-500 italic flex items-center h-8">No skills specified</span>
-                    )}
+                  {/* Stats Section - Fixed Height */}
+                  <div className="mb-4 grid grid-cols-2 gap-3 h-16">
+                    <div className="bg-gradient-to-br from-slate-50/80 to-slate-100/80 backdrop-blur-sm rounded-xl p-3 border border-slate-200/50 flex flex-col justify-center">
+                      <span className="text-xs font-bold text-slate-600 block">Team</span>
+                      <p className="text-slate-800 font-bold text-sm">{team.currentMembers || 0}/{team.teamSize || 0}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-slate-50/80 to-slate-100/80 backdrop-blur-sm rounded-xl p-3 border border-slate-200/50 flex flex-col justify-center">
+                      <span className="text-xs font-bold text-slate-600 block">Apps</span>
+                      <p className="text-slate-800 font-bold text-sm">{(team.applications || []).length}</p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Current Members Preview */}
-                <div className="mb-6">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 block">Team Members</span>
-                  <div className="space-y-2 min-h-[5rem] flex flex-col justify-start">
-                    {team.members && team.members.length > 0 ? (
-                      <>
-                        {(team.members || []).slice(0, 2).map((member, index) => (
-                          <div key={index} className="flex items-center text-sm">
-                            <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full flex items-center justify-center text-white font-medium text-xs mr-3 flex-shrink-0">
-                              {(member.name || 'U').charAt(0).toUpperCase()}
+                  {/* Interactive Skills Section - Like Landing Page */}
+                  <div className="mb-4 h-16">
+                    <div className="text-xs font-bold text-slate-600 mb-2">Skills Required</div>
+                    <div className="flex flex-wrap gap-2 h-10 overflow-hidden">
+                      {(team.skillsNeeded || []).length > 0 ? (
+                        <>
+                          {(team.skillsNeeded || []).slice(0, 2).map((skill, index) => (
+                            <span key={index} className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium border border-purple-200 h-fit">
+                              {skill}
+                            </span>
+                          ))}
+                          {(team.skillsNeeded || []).length > 2 && (
+                            <button 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setSkillsModal({
+                                  isOpen: true,
+                                  skills: team.skillsNeeded,
+                                  teamTitle: team.title || 'Untitled Project'
+                                });
+                              }}
+                              className="text-slate-500 text-xs bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-full border border-slate-200 h-fit transition-colors cursor-pointer"
+                            >
+                              +{(team.skillsNeeded || []).length - 2} more
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-xs text-slate-500 italic">No skills specified</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Team Members Section */}
+                  <div className="mb-6 h-24">
+                    <div className="text-xs font-bold text-slate-600 mb-2">Team Members</div>
+                    <div className="space-y-2 h-18 overflow-hidden">
+                      {team.members && team.members.length > 0 ? (
+                        <>
+                          {(team.members || []).slice(0, 2).map((member, index) => (
+                            <div key={index} className="flex items-center text-xs">
+                              <div className="w-6 h-6 bg-gradient-to-r from-emerald-400 via-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs mr-2 flex-shrink-0 shadow-sm">
+                                {(member.name || 'U').charAt(0).toUpperCase()}
+                              </div>
+                              <div className="flex-grow min-w-0">
+                                <span className="font-medium text-slate-800 block truncate text-xs">{member.name || 'Unknown'}</span>
+                                <span className="text-slate-500 text-xs block truncate">{member.role || 'Member'}</span>
+                              </div>
                             </div>
-                            <div className="flex-grow min-w-0">
-                              <span className="font-medium text-slate-800 block truncate">{member.name || 'Unknown'}</span>
-                              <span className="text-slate-500 text-xs block truncate">{member.role || 'Member'}</span>
-                            </div>
-                          </div>
-                        ))}
-                        {(team.members || []).length > 2 && (
-                          <div className="text-xs text-slate-500 pl-11 pt-1">+{(team.members || []).length - 2} more members</div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="text-sm text-slate-500 italic flex items-center h-8">No members yet</div>
-                    )}
+                          ))}
+                          {(team.members || []).length > 2 && (
+                            <div className="text-xs text-slate-500 pl-8">+{(team.members || []).length - 2} more members</div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="text-xs text-slate-500 italic">No members yet</div>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                {/* Tags */}
-                <div className="mb-6">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 block">Tags</span>
-                  <div className="flex flex-wrap gap-2 min-h-[2.5rem] items-start">
-                    {team.tags && team.tags.length > 0 ? (
-                      team.tags.slice(0, 3).map((tag, index) => (
-                        <span key={index} className="bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 text-xs px-3 py-2 rounded-full font-medium whitespace-nowrap">
-                          #{tag}
-                        </span>
-                      ))
-                    ) : (
-                      <span className="text-sm text-slate-500 italic flex items-center h-8">No tags</span>
-                    )}
-                  </div>
-                </div>
+                  {/* Compact Action Button */}
+                  <div className="mt-auto">
+                    <button
+                      onClick={() => handleButtonClick(team)}
+                      disabled={buttonState.disabled}
+                      className={`w-full py-2.5 px-4 rounded-xl text-white font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg text-sm ${buttonState.className}`}
+                    >
+                      {buttonState.text}
+                    </button>
 
-                {/* Spacer to push button to bottom */}
-                <div className="flex-grow"></div>
-
-                {/* Join Button - Always at the bottom */}
-                <div className="mt-auto">
-                  <button
-                    onClick={() => handleButtonClick(team)}
-                    disabled={buttonState.disabled}
-                    className={`w-full py-4 px-6 rounded-2xl text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg ${buttonState.className}`}
-                  >
-                    {buttonState.text}
-                  </button>
-
-                  {/* Created by info */}
-                  <div className="mt-4 text-xs text-slate-500 text-center bg-slate-50/50 rounded-xl py-2">
-                    Created {team.createdAt ? new Date(team.createdAt?.toDate?.() || team.createdAt).toLocaleDateString() : 'Unknown date'}
+                    {/* Compact Created Info */}
+                    <div className="mt-2 text-xs text-slate-500 text-center bg-gradient-to-br from-slate-50/80 to-slate-100/80 backdrop-blur-sm rounded-lg py-1 border border-slate-200/50">
+                      {team.createdAt ? new Date(team.createdAt?.toDate?.() || team.createdAt).toLocaleDateString() : 'Unknown date'}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -479,6 +502,86 @@ function TeamsPage() {
           })}
         </div>
       )}
+      
+      {/* Skills Modal */}
+      {skillsModal.isOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/50 p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-slate-800">Skills Required</h3>
+              <button
+                onClick={() => setSkillsModal({ isOpen: false, skills: [], teamTitle: '' })}
+                className="w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center transition-colors duration-200"
+              >
+                <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-slate-600 mb-6 text-lg">
+              <span className="font-semibold text-slate-800">{skillsModal.teamTitle}</span> is looking for team members with these skills:
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {skillsModal.skills.map((skill, index) => (
+                <span key={index} className="bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 text-purple-800 text-sm px-4 py-3 rounded-full font-semibold border border-purple-200 shadow-sm">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Skills Modal */}
+      {skillsModal.isOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/50 p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-slate-800">Skills Required</h3>
+              <button
+                onClick={() => setSkillsModal({ isOpen: false, skills: [], teamTitle: '' })}
+                className="w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center transition-colors duration-200"
+              >
+                <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-slate-600 mb-6 text-lg">
+              <span className="font-semibold text-slate-800">{skillsModal.teamTitle}</span> is looking for team members with these skills:
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {skillsModal.skills.map((skill, index) => (
+                <span key={index} className="bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 text-purple-800 text-sm px-4 py-3 rounded-full font-semibold border border-purple-200 shadow-sm">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Floating Action Button - Create Team Shortcut */}
+      <Link to="/create-team">
+        <button className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 z-50 flex items-center justify-center group">
+          <svg 
+            className="w-8 h-8 transition-transform duration-300 group-hover:rotate-90" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4" />
+          </svg>
+          
+          {/* Tooltip */}
+          <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block">
+            <div className="bg-slate-800 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap shadow-lg">
+              Create New Team
+              <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-800"></div>
+            </div>
+          </div>
+        </button>
+      </Link>
       </div>
     </div>
   );

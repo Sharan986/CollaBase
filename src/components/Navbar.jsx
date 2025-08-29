@@ -48,10 +48,9 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { path: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { path: '/teams', label: 'Projects', icon: '🚀' },
     { path: '/applications', label: 'Applications', icon: '📋' },
-    { path: '/create-team', label: 'SIH', icon: '💡' },
+    { path: '/sih', label: 'SIH', icon: '💡' },
     { path: '/manage-teams', label: 'My Teams', icon: '👥' },
   ];
 
