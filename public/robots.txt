@@ -1,0 +1,40 @@
+User-agent: *
+Allow: /
+Allow: /auth
+Allow: /faqs
+
+# Allow crawling of public pages
+Allow: /$
+Allow: /auth$
+Allow: /faqs$
+
+# Disallow protected/private pages
+Disallow: /dashboard
+Disallow: /projects
+Disallow: /applications
+Disallow: /my-teams
+Disallow: /profile
+Disallow: /create-team
+Disallow: /team/
+Disallow: /sih
+
+# Disallow old route paths (redirects)
+Disallow: /teams
+Disallow: /manage-teams
+
+# Allow specific bots
+User-agent: Googlebot
+Allow: /
+Allow: /auth
+Allow: /faqs
+
+User-agent: Bingbot
+Allow: /
+Allow: /auth
+Allow: /faqs
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://collabase.vercel.app/sitemap.xml

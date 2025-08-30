@@ -67,7 +67,7 @@ function AppRoutes() {
             } 
           />
           <Route 
-            path="/teams" 
+            path="/projects" 
             element={
               <ProtectedRoute>
                 <TeamsPage />
@@ -91,7 +91,7 @@ function AppRoutes() {
             } 
           />
           <Route 
-            path="/manage-teams" 
+            path="/my-teams" 
             element={
               <ProtectedRoute>
                 <ManageTeamsPage />
@@ -106,6 +106,9 @@ function AppRoutes() {
               </ProtectedRoute>
             } 
           />
+          {/* Backward compatibility redirects */}
+          <Route path="/teams" element={<Navigate to="/projects" replace />} />
+          <Route path="/manage-teams" element={<Navigate to="/my-teams" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>
