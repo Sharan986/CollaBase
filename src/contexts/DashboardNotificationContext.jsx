@@ -51,13 +51,6 @@ export function DashboardNotificationProvider({ children }) {
     };
   }, [currentUser]);
 
-  // Clean up old notifications on mount
-  useEffect(() => {
-    if (currentUser) {
-      cleanupOldNotifications();
-    }
-  }, [currentUser]);
-
   // Dismiss a notification
   const dismissNotification = async (notificationId) => {
     try {
@@ -65,38 +58,6 @@ export function DashboardNotificationProvider({ children }) {
       console.log('Notification dismissed and deleted:', notificationId);
     } catch (error) {
       console.error('Error dismissing notification:', error);
-    }
-  };
-
-  // Clean up old notifications (older than 30 days)
-  const cleanupOldNotifications = async () => {
-    try {
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-      const q = query(
-        collection(db, 'dashboardNotifications'),
-        where('userId', '==', currentUser.uid)
-      );
-
-      const snapshot = await getDocs(q);
-      const deletePromises = [];
-
-      snapshot.docs.forEach(doc => {
-        const data = doc.data();
-        const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-        
-        if (createdAt < thirtyDaysAgo) {
-          deletePromises.push(deleteDoc(doc.ref));
-        }
-      });
-
-      if (deletePromises.length > 0) {
-        await Promise.all(deletePromises);
-        console.log(`Cleaned up ${deletePromises.length} old notifications`);
-      }
-    } catch (error) {
-      console.error('Error cleaning up old notifications:', error);
     }
   };
 
