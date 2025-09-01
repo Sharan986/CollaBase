@@ -138,8 +138,8 @@ function ManageTeamsPage() {
 
       // Create dashboard notification for accepted applicant
       const message = team.whatsappLink 
-        ? `Congratulations! You've been accepted to join "${team.title}". Welcome to the team! 🎉 Join the WhatsApp group to start collaborating.`
-        : `Congratulations! You've been accepted to join "${team.title}". Welcome to the team! 🎉`;
+        ? `Congratulations! You've been accepted to join "${team.title}". Welcome to the team! Join the WhatsApp group to start collaborating.`
+        : `Congratulations! You've been accepted to join "${team.title}". Welcome to the team!`;
         
       await createDashboardNotification(
         applicantId,
@@ -150,7 +150,7 @@ function ManageTeamsPage() {
       );
 
       // Show success toast
-      showToast(`${applicantProfile.name} accepted to ${team.title}! 🎉`, 'success');
+      showToast(`${applicantProfile.name} accepted to ${team.title}!`, 'success');
 
       console.log(`Accepted ${applicantProfile.name} to team`);
     } catch (error) {
@@ -179,7 +179,7 @@ function ManageTeamsPage() {
         'rejected',
         teamId,
         team.title,
-        `Thank you for your interest in "${team.title}". Unfortunately, we've decided to go with other candidates this time. Keep exploring other amazing projects! 💪`
+        `Thank you for your interest in "${team.title}". Unfortunately, we've decided to go with other candidates this time. Keep exploring other amazing projects!`
       );
 
       // Show notification toast
@@ -295,12 +295,12 @@ function ManageTeamsPage() {
         {/* Modern Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl shadow-2xl mb-6">
-            <span className="text-3xl">👥</span>
+            <span className="text-3xl"></span>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-900 bg-clip-text text-transparent leading-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl inter-bold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-900 bg-clip-text text-transparent leading-tight">
             My Teams
           </h1>
-          <p className="text-slate-600 text-lg max-w-2xl mx-auto mt-4 leading-relaxed">
+          <p className="text-slate-600 text-lg max-w-2xl mx-auto mt-4 leading-relaxed inter-regular">
             Manage teams you created and collaborate on projects you've joined
           </p>
           <div className="flex justify-center gap-6 text-sm text-slate-600 mt-4">
@@ -320,7 +320,7 @@ function ManageTeamsPage() {
           <div className="bg-white/70 backdrop-blur-lg border border-white/20 rounded-2xl shadow-xl p-2 inline-flex">
             <button
               onClick={() => setActiveTab('created')}
-              className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 ${
+              className={`px-6 py-3 rounded-xl inter-semibold text-sm transition-all duration-200 ${
                 activeTab === 'created'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
                   : 'text-slate-700 hover:bg-white/50'
@@ -330,7 +330,7 @@ function ManageTeamsPage() {
             </button>
             <button
               onClick={() => setActiveTab('member')}
-              className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 ${
+              className={`px-6 py-3 rounded-xl inter-semibold text-sm transition-all duration-200 ${
                 activeTab === 'member'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
                   : 'text-slate-700 hover:bg-white/50'
@@ -347,15 +347,17 @@ function ManageTeamsPage() {
         myTeams.length === 0 ? (
           <div className="bg-white/70 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl p-12 text-center">
             <div className="w-20 h-20 bg-gradient-to-r from-slate-400 to-slate-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
-              <span className="text-3xl">👥</span>
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
             </div>
-            <h3 className="text-2xl font-bold text-slate-800 mb-3">No Teams Created Yet</h3>
-            <p className="text-slate-600 mb-8 max-w-md mx-auto leading-relaxed">
+            <h3 className="text-2xl inter-bold text-slate-800 mb-3">No Teams Created Yet</h3>
+            <p className="text-slate-600 mb-8 max-w-md mx-auto leading-relaxed inter-regular">
               You haven't created any teams yet. Start a new project and build your amazing team!
             </p>
             <a
               href="/create-team"
-              className="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+              className="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl inter-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
               Create Your First Team
             </a>
@@ -368,16 +370,16 @@ function ManageTeamsPage() {
               <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-100 border-b border-white/20">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-xl font-bold text-slate-800 mb-3">{team.title}</h3>
+                    <h3 className="text-xl inter-bold text-slate-800 mb-3">{team.title}</h3>
                     <div className="flex items-center gap-3 flex-wrap">
-                      <span className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg">
+                      <span className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs px-3 py-1 rounded-full inter-medium shadow-lg">
                         {team.category}
                       </span>
-                      <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg">
+                      <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs px-3 py-1 rounded-full inter-medium shadow-lg">
                         Your Team
                       </span>
                       {team.applications?.length > 0 && (
-                        <span className="bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg animate-pulse">
+                        <span className="bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs px-3 py-1 rounded-full inter-medium shadow-lg animate-pulse">
                           {team.applications.length} New Applications
                         </span>
                       )}
@@ -387,7 +389,7 @@ function ManageTeamsPage() {
                     <div className="text-xs text-slate-500">
                       Created {formatDate(team.createdAt)}
                     </div>
-                    <div className="text-sm font-semibold text-slate-700">
+                    <div className="text-sm inter-semibold text-slate-700">
                       {team.currentMembers}/{team.teamSize} members
                     </div>
                   </div>
@@ -401,20 +403,20 @@ function ManageTeamsPage() {
                 {/* Quick Stats */}
                 <div className="grid md:grid-cols-4 gap-4 mb-6">
                   <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-2xl border border-blue-200">
-                    <div className="text-lg font-bold text-blue-600">{team.applications?.length || 0}</div>
-                    <div className="text-xs text-blue-700 font-medium">Pending Applications</div>
+                    <div className="text-lg inter-bold text-blue-600">{team.applications?.length || 0}</div>
+                    <div className="text-xs text-blue-700 inter-medium">Pending Applications</div>
                   </div>
                   <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-2xl border border-green-200">
-                    <div className="text-lg font-bold text-green-600">{team.currentMembers}</div>
-                    <div className="text-xs text-green-700 font-medium">Current Members</div>
+                    <div className="text-lg inter-bold text-green-600">{team.currentMembers}</div>
+                    <div className="text-xs text-green-700 inter-medium">Current Members</div>
                   </div>
                   <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-2xl border border-yellow-200">
-                    <div className="text-lg font-bold text-yellow-600">{team.teamSize - team.currentMembers}</div>
-                    <div className="text-xs text-yellow-700 font-medium">Spots Remaining</div>
+                    <div className="text-lg inter-bold text-yellow-600">{team.teamSize - team.currentMembers}</div>
+                    <div className="text-xs text-yellow-700 inter-medium">Spots Remaining</div>
                   </div>
                   <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-2xl border border-purple-200">
-                    <div className="text-lg font-bold text-purple-600">{team.skillsNeeded.length}</div>
-                    <div className="text-xs text-purple-700 font-medium">Skills Needed</div>
+                    <div className="text-lg inter-bold text-purple-600">{team.skillsNeeded.length}</div>
+                    <div className="text-xs text-purple-700 inter-medium">Skills Needed</div>
                   </div>
                 </div>
 
@@ -433,13 +435,13 @@ function ManageTeamsPage() {
                   {/* WhatsApp Group Management */}
                   {activeTab === 'created' && (
                     <div className="mb-8 bg-green-50 border border-green-200 rounded-lg p-4">
-                      <h4 className="text-lg font-semibold text-green-800 mb-3 flex items-center">
-                        💬 WhatsApp Group
+                      <h4 className="text-lg inter-semibold text-green-800 mb-3 flex items-center">
+                        WhatsApp Group
                       </h4>
                       {team.whatsappLink ? (
                         <div>
                           <p className="text-green-700 mb-3">
-                            ✅ WhatsApp group is set up! New members will get access when accepted.
+                            WhatsApp group is set up! New members will get access when accepted.
                           </p>
                           <div className="flex items-center gap-3">
                             <a
@@ -448,7 +450,7 @@ function ManageTeamsPage() {
                               rel="noopener noreferrer"
                               className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                             >
-                              🔗 Open Group
+                              Open Group
                             </a>
                             <button
                               onClick={() => {
@@ -457,26 +459,26 @@ function ManageTeamsPage() {
                               }}
                               className="px-4 py-2 bg-green-100 text-green-700 rounded-md hover:bg-green-200"
                             >
-                              📋 Copy Link
+                              Copy Link
                             </button>
                             <button
                               onClick={() => openWhatsAppModal(team)}
                               className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
                             >
-                              ✏️ Edit Link
+                              Edit Link
                             </button>
                           </div>
                         </div>
                       ) : (
                         <div>
                           <p className="text-green-700 mb-3">
-                            💡 Create a WhatsApp group and add the link to help team members communicate!
+                            Create a WhatsApp group and add the link to help team members communicate!
                           </p>
                           <button
                             onClick={() => openWhatsAppModal(team)}
                             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                           >
-                            📱 Add WhatsApp Group Link
+                            Add WhatsApp Group Link
                           </button>
                         </div>
                       )}
@@ -486,7 +488,7 @@ function ManageTeamsPage() {
                   {/* Applications Section */}
                   {team.applications?.length > 0 ? (
                     <div className="mb-8">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                      <h4 className="text-lg inter-semibold text-gray-900 mb-4">
                         Pending Applications ({team.applications.length})
                       </h4>
                       <div className="space-y-4">
@@ -502,13 +504,13 @@ function ManageTeamsPage() {
                             <div key={applicantId} className="bg-gray-50 p-4 rounded-lg">
                               <div className="flex justify-between items-start">
                                 <div className="flex-1">
-                                  <h5 className="font-semibold text-gray-900">{profile.name}</h5>
+                                  <h5 className="inter-semibold text-gray-900">{profile.name}</h5>
                                   <p className="text-sm text-gray-600">{profile.email}</p>
                                   <p className="text-sm text-gray-600">{profile.year} • {profile.branch}</p>
                                   
                                   {profile.skills?.length > 0 && (
                                     <div className="mt-2">
-                                      <span className="text-sm font-medium text-gray-700">Skills:</span>
+                                      <span className="text-sm inter-medium text-gray-700">Skills:</span>
                                       <div className="flex flex-wrap gap-1 mt-1">
                                         {profile.skills.map((skill, index) => (
                                           <span key={index} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
@@ -521,7 +523,7 @@ function ManageTeamsPage() {
 
                                   {/* Skill Match Indicator */}
                                   <div className="mt-2">
-                                    <span className="text-sm font-medium text-gray-700">Skill Match:</span>
+                                    <span className="text-sm inter-medium text-gray-700">Skill Match:</span>
                                     <div className="flex flex-wrap gap-1 mt-1">
                                       {team.skillsNeeded.map((neededSkill, index) => {
                                         const hasSkill = profile.skills?.some(userSkill => 
@@ -580,14 +582,14 @@ function ManageTeamsPage() {
                     </div>
                   ) : (
                     <div className="mb-8 bg-yellow-50 p-4 rounded-lg">
-                      <h4 className="text-lg font-semibold text-yellow-800 mb-2">No Pending Applications</h4>
+                      <h4 className="text-lg inter-semibold text-yellow-800 mb-2">No Pending Applications</h4>
                       <p className="text-yellow-700">No one has applied to join this team yet.</p>
                     </div>
                   )}
 
                   {/* Current Members Section */}
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h4 className="text-lg inter-semibold text-gray-900 mb-4">
                       Current Members ({team.currentMembers})
                     </h4>
                     <div className="grid md:grid-cols-2 gap-4">
@@ -595,7 +597,7 @@ function ManageTeamsPage() {
                         <div key={index} className="bg-blue-50 p-4 rounded-lg">
                           <div className="flex justify-between items-start">
                             <div>
-                              <h5 className="font-semibold text-gray-900">{member.name}</h5>
+                              <h5 className="inter-semibold text-gray-900">{member.name}</h5>
                               <p className="text-sm text-blue-600">{member.role}</p>
                               {member.joinedAt && (
                                 <p className="text-xs text-gray-500">
@@ -605,7 +607,7 @@ function ManageTeamsPage() {
                               
                               {member.skills?.length > 0 && (
                                 <div className="mt-2">
-                                  <span className="text-sm font-medium text-gray-700">Skills:</span>
+                                  <span className="text-sm inter-medium text-gray-700">Skills:</span>
                                   <div className="flex flex-wrap gap-1 mt-1">
                                     {member.skills.slice(0, 3).map((skill, skillIndex) => (
                                       <span key={skillIndex} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
@@ -651,13 +653,13 @@ function ManageTeamsPage() {
             <div className="w-20 h-20 bg-gradient-to-r from-purple-400 to-purple-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
               <span className="text-3xl">👤</span>
             </div>
-            <h3 className="text-2xl font-bold text-slate-800 mb-3">No Teams Joined Yet</h3>
+            <h3 className="text-2xl inter-bold text-slate-800 mb-3">No Teams Joined Yet</h3>
             <p className="text-slate-600 mb-8 max-w-md mx-auto leading-relaxed">
               You haven't been accepted to any teams yet. Browse available teams and apply to join amazing projects!
             </p>
             <a
               href="/teams"
-              className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+              className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl inter-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
               Browse Teams
             </a>
@@ -741,7 +743,7 @@ function ManageTeamsPage() {
                   {team.whatsappLink && (
                     <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4">
                       <h4 className="text-sm font-medium text-green-800 mb-2 flex items-center">
-                        💬 Team WhatsApp Group
+                        Team WhatsApp Group
                       </h4>
                       <p className="text-green-700 text-sm mb-3">
                         Join the team's WhatsApp group to collaborate and stay updated!
@@ -753,7 +755,7 @@ function ManageTeamsPage() {
                           rel="noopener noreferrer"
                           className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 flex items-center gap-2"
                         >
-                          📱 Join WhatsApp Group
+                          Join WhatsApp Group
                         </a>
                         <button
                           onClick={() => {
@@ -762,7 +764,7 @@ function ManageTeamsPage() {
                           }}
                           className="px-4 py-2 bg-green-100 text-green-700 text-sm rounded-md hover:bg-green-200"
                         >
-                          📋 Copy Link
+                          Copy Link
                         </button>
                       </div>
                     </div>
@@ -790,21 +792,21 @@ function ManageTeamsPage() {
               href="/create-team"
               className="block bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow border"
             >
-              <h4 className="font-medium text-gray-900 mb-2">🚀 Create Another Team</h4>
+              <h4 className="font-medium text-gray-900 mb-2">Create Another Team</h4>
               <p className="text-sm text-gray-600">Start a new project</p>
             </a>
             <a
               href="/teams"
               className="block bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow border"
             >
-              <h4 className="font-medium text-gray-900 mb-2">🔍 Browse Teams</h4>
+              <h4 className="font-medium text-gray-900 mb-2">Browse Teams</h4>
               <p className="text-sm text-gray-600">See what others are building</p>
             </a>
             <a
               href="/dashboard"
               className="block bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow border"
             >
-              <h4 className="font-medium text-gray-900 mb-2">📊 Dashboard</h4>
+              <h4 className="font-medium text-gray-900 mb-2">Dashboard</h4>
               <p className="text-sm text-gray-600">Back to overview</p>
             </a>
           </div>
@@ -816,7 +818,7 @@ function ManageTeamsPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <h3 className="text-lg font-semibold mb-4">
-              📱 Add WhatsApp Group Link
+              Add WhatsApp Group Link
             </h3>
             <p className="text-gray-600 mb-4">
               Paste your WhatsApp group invitation link below. Team members will be able to join the group when they're accepted.
@@ -836,7 +838,7 @@ function ManageTeamsPage() {
             </div>
 
             <div className="text-xs text-gray-500 mb-4">
-              💡 To create a WhatsApp group: Open WhatsApp → New Group → Add members → Group Info → Invite to Group via Link → Copy Link
+              To create a WhatsApp group: Open WhatsApp → New Group → Add members → Group Info → Invite to Group via Link → Copy Link
             </div>
 
             <div className="flex gap-3">

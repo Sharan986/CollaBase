@@ -87,10 +87,10 @@ const FAQPage = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-900 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-900 bg-clip-text text-transparent mb-4 inter-bold">
             Frequently Asked Questions
           </h1>
-          <p className="text-slate-600 text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-600 text-lg max-w-2xl mx-auto leading-relaxed inter-regular">
             Find answers to common questions about using CollaBase for team collaboration and project management
           </p>
         </div>
@@ -106,7 +106,7 @@ const FAQPage = () => {
                 onClick={() => toggleFAQ(faq.id)}
                 className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-white/50 transition-all duration-200"
               >
-                <h3 className="text-lg font-semibold text-slate-800 pr-4">
+                <h3 className="text-lg font-semibold text-slate-800 pr-4 inter-semibold">
                   {faq.question}
                 </h3>
                 <div className="flex-shrink-0">
@@ -144,23 +144,23 @@ const FAQPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-slate-800 mb-2">
+            <h3 className="text-xl font-bold text-slate-800 mb-2 inter-bold">
               Still have questions?
             </h3>
-            <p className="text-slate-600 mb-6">
+            <p className="text-slate-600 mb-6 inter-regular">
               Can't find the answer you're looking for? Contact your university's IT support team for additional assistance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="mailto:support@arkajainuniversity.ac.in"
-                className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg inter-semibold"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 Email Support
               </a>
-              <button className="inline-flex items-center justify-center px-6 py-3 border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-800 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105">
+              <button className="inline-flex items-center justify-center px-6 py-3 border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-800 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 inter-semibold">
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>

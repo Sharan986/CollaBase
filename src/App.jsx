@@ -16,6 +16,7 @@ import CreateTeamPage from './pages/CreateTeamPage';
 import ManageTeamsPage from './pages/ManageTeamsPage';
 import TeamDetailsPage from './pages/TeamDetailsPage';
 import FAQPage from './pages/FAQPage';
+import SIHPage from './pages/SIHPage';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -50,6 +51,7 @@ function AppRoutes() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/faqs" element={<FAQPage />} />
+          <Route path="/sih" element={<SIHPage />} />
           <Route 
             path="/dashboard" 
             element={

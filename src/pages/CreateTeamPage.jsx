@@ -143,7 +143,7 @@ function CreateTeamPage() {
       const docRef = await addDoc(collection(db, 'teams'), teamData);
       console.log('Team created with ID:', docRef.id);
       
-      showToast(`Team "${formData.title}" created successfully! 🎉`, 'success');
+      showToast(`Team "${formData.title}" created successfully!`, 'success');
       setTimeout(() => {
         navigate('/teams');
       }, 1500);
@@ -169,12 +169,12 @@ function CreateTeamPage() {
         {/* Modern Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl shadow-2xl mb-6">
-            <span className="text-3xl">✨</span>
+            <span className="text-3xl"></span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-slate-800 via-green-800 to-emerald-900 bg-clip-text text-transparent leading-tight">
+          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-slate-800 via-green-800 to-emerald-900 bg-clip-text text-transparent leading-tight inter-bold">
             Create New Team
           </h1>
-          <p className="text-slate-600 text-lg max-w-2xl mx-auto mt-4 leading-relaxed">
+          <p className="text-slate-600 text-lg max-w-2xl mx-auto mt-4 leading-relaxed inter-regular">
             Start an amazing project and recruit talented teammates to bring your vision to life
           </p>
         </div>
@@ -184,7 +184,7 @@ function CreateTeamPage() {
           <form onSubmit={handleSubmit} className="space-y-8">
           {/* Title */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700 uppercase tracking-wide">
+            <label className="block text-sm font-semibold text-slate-700 uppercase tracking-wide inter-semibold">
               Project Title *
             </label>
             <input
@@ -200,7 +200,7 @@ function CreateTeamPage() {
 
           {/* Description */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700 uppercase tracking-wide">
+            <label className="block text-sm font-semibold text-slate-700 uppercase tracking-wide inter-semibold">
               Project Description *
             </label>
             <textarea
@@ -212,7 +212,7 @@ function CreateTeamPage() {
               className="w-full p-4 bg-white/50 border border-white/30 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 backdrop-blur-sm transition-all duration-200 text-slate-800 placeholder-slate-400 resize-none"
               required
             />
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1 inter-regular">
               {formData.description.length}/500 characters
             </p>
           </div>
@@ -220,7 +220,7 @@ function CreateTeamPage() {
           {/* Category and Team Size */}
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-slate-700 uppercase tracking-wide inter-semibold">
                 Category *
               </label>
               <select
@@ -238,7 +238,7 @@ function CreateTeamPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2 inter-medium">
                 Team Size (including you) *
               </label>
               <select
@@ -257,7 +257,7 @@ function CreateTeamPage() {
 
           {/* Skills Needed */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2 inter-medium">
               Skills Needed *
             </label>
             <div className="flex gap-2 mb-3">
@@ -296,7 +296,7 @@ function CreateTeamPage() {
                 {formData.skillsNeeded.map((skill, index) => (
                   <span
                     key={index}
-                    className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full flex items-center gap-2"
+                    className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full flex items-center gap-2 inter-medium"
                   >
                     {skill}
                     <button
@@ -314,7 +314,7 @@ function CreateTeamPage() {
 
           {/* Tags */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2 inter-medium">
               Tags (optional)
             </label>
             <div className="flex gap-2 mb-3">
@@ -358,7 +358,7 @@ function CreateTeamPage() {
 
           {/* Additional Requirements */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2 inter-medium">
               Additional Requirements (optional)
             </label>
             <textarea
@@ -373,7 +373,7 @@ function CreateTeamPage() {
 
           {/* WhatsApp Group Link */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2 inter-medium">
               WhatsApp Group Link (optional)
             </label>
             <input
@@ -384,8 +384,8 @@ function CreateTeamPage() {
               placeholder="https://chat.whatsapp.com/..."
               className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             />
-            <p className="text-sm text-gray-500 mt-1">
-              💡 Create a WhatsApp group for your team and paste the invite link here. Accepted members will get access to join.
+            <p className="text-sm text-gray-500 mt-1 inter-regular">
+              Create a WhatsApp group for your team and paste the invite link here. Accepted members will get access to join.
             </p>
           </div>
 
@@ -405,18 +405,18 @@ function CreateTeamPage() {
             <button
               type="submit"
               disabled={loading}
-              className={`flex-1 py-4 px-8 rounded-2xl font-semibold transition-all duration-200 shadow-lg ${
+              className={`flex-1 py-4 px-8 rounded-2xl font-semibold transition-all duration-200 shadow-lg inter-semibold ${
                 loading
                   ? 'bg-slate-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transform hover:scale-105'
               } text-white`}
             >
-              {loading ? 'Creating Team...' : '✨ Create Amazing Team'}
+              {loading ? 'Creating Team...' : 'Create Amazing Team'}
             </button>
             <button
               type="button"
               onClick={() => navigate('/teams')}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 inter-medium"
             >
               Cancel
             </button>
@@ -426,23 +426,23 @@ function CreateTeamPage() {
 
       {/* Tips Section */}
       <div className="mt-8 bg-blue-50 rounded-lg p-6">
-        <h3 className="text-lg font-medium text-blue-900 mb-4">💡 Tips for Creating a Great Team</h3>
+        <h3 className="text-lg font-medium text-blue-900 mb-4 inter-medium">Tips for Creating a Great Team</h3>
         <ul className="space-y-2 text-sm text-blue-800">
           <li className="flex items-start gap-2">
             <span className="text-blue-600">•</span>
-            <span>Write a clear, compelling project description that explains the problem you're solving</span>
+            <span className="inter-regular">Write a clear, compelling project description that explains the problem you're solving</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-blue-600">•</span>
-            <span>Be specific about the skills you need - this helps attract the right teammates</span>
+            <span className="inter-regular">Be specific about the skills you need - this helps attract the right teammates</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-blue-600">•</span>
-            <span>Add relevant tags to make your project discoverable</span>
+            <span className="inter-regular">Add relevant tags to make your project discoverable</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-blue-600">•</span>
-            <span>Set realistic expectations about time commitment and project scope</span>
+            <span className="inter-regular">Set realistic expectations about time commitment and project scope</span>
           </li>
         </ul>
       </div>

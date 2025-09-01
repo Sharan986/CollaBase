@@ -168,7 +168,7 @@ function TeamsPage() {
       }
       
       // Show success toast
-      showToast(`Application sent to ${teamName}! 🎉`, 'success');
+      showToast(`Application sent to ${teamName}!`, 'success');
       
       // Update the team in local state to reflect the application
       setTeams(prevTeams => prevTeams.map(team => 
@@ -227,7 +227,7 @@ function TeamsPage() {
             </svg>
           </div>
           {/* <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500/20 border-t-blue-500 mx-auto mb-6"></div> */}
-          <p className="text-slate-600 text-lg font-medium">Loading projects...</p>
+          <p className="text-slate-600 text-lg font-medium inter-medium">Loading projects...</p>
         </div>
       </div>
     );
@@ -250,13 +250,13 @@ function TeamsPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-purple-900 bg-clip-text text-transparent leading-tight mb-6">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-purple-900 bg-clip-text text-transparent leading-tight mb-6 inter-bold">
             Discover Projects
           </h1>
-          <p className="text-slate-600 text-xl sm:text-2xl mt-4 max-w-3xl mx-auto leading-relaxed font-light">
+          <p className="text-slate-600 text-xl sm:text-2xl mt-4 max-w-3xl mx-auto leading-relaxed font-light inter-light">
             Join exciting teams, collaborate on innovative projects, and bring ideas to life
           </p>
-          <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 border border-blue-200 text-blue-700 px-6 py-3 rounded-full text-lg font-medium mt-6 shadow-lg">
+          <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 border border-blue-200 text-blue-700 px-6 py-3 rounded-full text-lg font-medium mt-6 shadow-lg inter-medium">
             <div className="w-3 h-3 bg-blue-500 rounded-full mr-3 animate-pulse"></div>
             {filteredTeams.length} {filteredTeams.length === 1 ? 'Project Available' : 'Projects Available'}
           </div>
@@ -268,7 +268,9 @@ function TeamsPage() {
           <div className="mb-6">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <span className="text-slate-400 text-xl">🔍</span>
+                <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
               <input
                 type="text"
@@ -283,7 +285,7 @@ function TeamsPage() {
           {/* Filters */}
           <div className="grid md:grid-cols-3 gap-6 mb-6">
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">Category</label>
+              <label className="text-sm font-semibold text-slate-700 inter-semibold">Category</label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
@@ -297,7 +299,7 @@ function TeamsPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">Skills</label>
+              <label className="text-sm font-semibold text-slate-700 inter-semibold">Skills</label>
               <select
                 value={selectedSkill}
                 onChange={(e) => setSelectedSkill(e.target.value)}
@@ -311,10 +313,10 @@ function TeamsPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">Actions</label>
+              <label className="text-sm font-semibold text-slate-700 inter-semibold">Actions</label>
               <button
                 onClick={clearFilters}
-                className="w-full bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 font-medium shadow-lg"
+                className="w-full bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 font-medium shadow-lg inter-medium"
               >
                 Clear Filters
               </button>
@@ -325,20 +327,27 @@ function TeamsPage() {
           {(searchTerm || selectedCategory || selectedSkill) && (
             <div className="flex flex-wrap gap-3">
               {searchTerm && (
-                <div className="flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
-                  <span className="mr-2">🔍</span>
+                <div className="flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium inter-medium">
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
                   Search: "{searchTerm}"
                 </div>
               )}
               {selectedCategory && (
-                <div className="flex items-center bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-medium">
-                  <span className="mr-2">📁</span>
+                <div className="flex items-center bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-medium inter-medium">
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v0M8 5v4h8V5" />
+                  </svg>
                   Category: {selectedCategory}
                 </div>
               )}
               {selectedSkill && (
-                <div className="flex items-center bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium">
-                  <span className="mr-2">⚡</span>
+                <div className="flex items-center bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium inter-medium">
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
                   Skill: {selectedSkill}
                 </div>
               )}
@@ -350,10 +359,12 @@ function TeamsPage() {
       {filteredTeams.length === 0 ? (
         <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/50 p-12 text-center">
           <div className="w-24 h-24 bg-gradient-to-r from-slate-400 to-slate-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
-            <span className="text-4xl">🔍</span>
+            <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 mb-4">No Teams Found</h3>
-          <p className="text-slate-600 text-lg mb-8 max-w-md mx-auto leading-relaxed">
+          <h3 className="text-2xl font-bold text-slate-800 mb-4 inter-bold">No Teams Found</h3>
+          <p className="text-slate-600 text-lg mb-8 max-w-md mx-auto leading-relaxed inter-regular">
             {searchTerm || selectedCategory || selectedSkill
               ? 'Try adjusting your filters to find more teams.'
               : 'No teams available at the moment. Be the first to create one!'
@@ -363,14 +374,14 @@ function TeamsPage() {
             {(searchTerm || selectedCategory || selectedSkill) && (
               <button
                 onClick={clearFilters}
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 font-medium shadow-lg"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 font-medium shadow-lg inter-medium"
               >
                 Clear Filters
               </button>
             )}
             <a
               href="/create-team"
-              className="inline-block bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 font-medium shadow-lg"
+              className="inline-block bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 font-medium shadow-lg inter-medium"
             >
               Create Team
             </a>
@@ -390,10 +401,10 @@ function TeamsPage() {
                   {/* Header Section - Flexible height for title */}
                   <div className="mb-4">
                     <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-lg font-bold text-slate-800 group-hover:text-slate-900 transition-colors duration-300 leading-tight pr-2 flex-1">
+                      <h3 className="text-lg font-bold text-slate-800 group-hover:text-slate-900 transition-colors duration-300 leading-tight pr-2 flex-1 inter-bold">
                         {team.title || 'Untitled Team'}
                       </h3>
-                      <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 text-white text-xs px-3 py-1 rounded-full flex-shrink-0 font-medium shadow-lg ml-2">
+                      <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 text-white text-xs px-3 py-1 rounded-full flex-shrink-0 font-medium shadow-lg ml-2 inter-medium">
                         {team.category || 'Other'}
                       </span>
                     </div>
@@ -401,9 +412,9 @@ function TeamsPage() {
 
                   {/* Description Section - Fixed height for consistency */}
                   <div className="mb-8 h-24">
-                    <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wide">Description</div>
+                    <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wide inter-semibold">Description</div>
                     <div className="h-16 overflow-hidden">
-                      <p className="text-slate-600 text-sm leading-relaxed">
+                      <p className="text-slate-600 text-sm leading-relaxed inter-regular">
                         {team.description || 'No description available for this project.'}
                       </p>
                     </div>

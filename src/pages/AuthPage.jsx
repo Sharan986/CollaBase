@@ -36,10 +36,10 @@ function AuthPage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/50 p-8">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-blue-800 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-blue-800 bg-clip-text text-transparent inter-bold">
               Complete Your Profile
             </h2>
-            <p className="text-slate-600 mt-2">Please complete your profile to continue</p>
+            <p className="text-slate-600 mt-2 inter-regular">Please complete your profile to continue</p>
           </div>
           <ProfileSetup onProfileComplete={handleProfileComplete} />
         </div>
@@ -139,7 +139,7 @@ function AuthPage() {
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 mx-auto mb-6"></div>
             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600 absolute top-0 left-1/2 transform -translate-x-1/2"></div>
           </div>
-          <p className="text-gray-700 font-medium text-lg">Loading your experience...</p>
+          <p className="text-gray-700 font-medium text-lg inter-medium">Loading your experience...</p>
         </div>
       </div>
     );
@@ -159,12 +159,12 @@ function AuthPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">Complete Your Profile</h2>
-              <p className="text-gray-600">Just a few more details to get you started</p>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2 inter-bold">Complete Your Profile</h2>
+              <p className="text-gray-600 inter-regular">Just a few more details to get you started</p>
             </div>
             <ProfileSetup onProfileComplete={handleProfileComplete} />
             {message && (
-              <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl text-blue-800 text-center font-medium">
+              <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl text-blue-800 text-center font-medium inter-medium">
                 {message}
               </div>
             )}
@@ -199,13 +199,13 @@ function AuthPage() {
             </svg>
           </div>
           
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-3">
+          <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-3 inter-bold">
             {isLoginMode ? 'Welcome back' : 'Join CollaBase'}
           </h2>
-          <p className="text-gray-600 text-lg mb-6">
+          <p className="text-gray-600 text-lg mb-6 inter-regular">
             {isLoginMode ? 'Sign in to continue your collaboration journey' : 'Create your account and start collaborating'}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 inter-regular">
             {isLoginMode ? "Don't have an account? " : "Already have an account? "}
             {/* ⚠️ DO NOT MODIFY: onClick function - keeps toggle functionality */}
             <button
@@ -220,7 +220,7 @@ function AuthPage() {
                   setRememberPassword(false);
                 }
               }}
-              className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
+              className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 inter-semibold"
             >
               {isLoginMode ? 'Sign up' : 'Sign in'}
             </button>
@@ -318,7 +318,7 @@ function AuthPage() {
                 <button
                   type="button"
                   onClick={handleForgotPassword}
-                  className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium"
+                  className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 inter-medium"
                 >
                   Forgot password?
                 </button>
@@ -329,7 +329,7 @@ function AuthPage() {
             {/* You can modify: colors, hover effects, size, but keep onClick function */}
             <button
               onClick={isLoginMode ? handleLogin : handleSignup}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 px-6 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:ring-4 focus:ring-blue-500/50"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 px-6 rounded-2xl inter-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:ring-4 focus:ring-blue-500/50"
             >
               {isLoginMode ? 'Sign In' : 'Create Account'}
             </button>
@@ -338,7 +338,7 @@ function AuthPage() {
           {/* ✅ FRONTEND UPDATE AREA: Message Display Styling */}
           {/* You can modify: colors, styling, positioning, but keep conditional logic */}
           {message && (
-            <div className={`mt-6 p-4 rounded-2xl text-sm font-medium text-center transition-all duration-300 ${
+            <div className={`mt-6 p-4 rounded-2xl text-sm inter-medium text-center transition-all duration-300 ${
               message.includes('Error') 
                 ? 'bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 text-red-700' 
                 : 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 text-green-700'

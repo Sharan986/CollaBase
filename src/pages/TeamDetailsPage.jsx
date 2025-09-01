@@ -66,8 +66,12 @@ function TeamDetailsPage() {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <div className="text-red-600 text-4xl mb-4">⚠️</div>
-          <h2 className="text-lg font-medium text-red-800 mb-2">Error</h2>
+          <div className="text-red-600 text-4xl mb-4">
+            <svg className="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <h2 className="text-lg inter-medium text-red-800 mb-2">Error</h2>
           <p className="text-red-700 mb-4">{error}</p>
           <Link
             to="/dashboard"
@@ -87,7 +91,7 @@ function TeamDetailsPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{team.name}</h1>
+            <h1 className="text-3xl inter-bold text-gray-900">{team.name}</h1>
             <p className="text-gray-600 mt-2">{team.description}</p>
           </div>
           <Link
@@ -103,24 +107,24 @@ function TeamDetailsPage() {
         {/* Team Information */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Team Information</h2>
+            <h2 className="text-xl inter-semibold text-gray-900 mb-4">Team Information</h2>
             <div className="space-y-4">
               <div>
-                <span className="font-medium text-gray-700">Category:</span>
+                <span className="inter-medium text-gray-700">Category:</span>
                 <span className="ml-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                   {team.category}
                 </span>
               </div>
               
               <div>
-                <span className="font-medium text-gray-700">Team Size:</span>
+                <span className="inter-medium text-gray-700">Team Size:</span>
                 <span className="ml-2 text-gray-900">
                   {team.currentMembers} / {team.maxMembers} members
                 </span>
               </div>
 
               <div>
-                <span className="font-medium text-gray-700">Status:</span>
+                <span className="inter-medium text-gray-700">Status:</span>
                 <span className={`ml-2 px-3 py-1 rounded-full text-sm ${
                   team.status === 'recruiting' 
                     ? 'bg-green-100 text-green-800' 
@@ -131,7 +135,7 @@ function TeamDetailsPage() {
               </div>
 
               <div>
-                <span className="font-medium text-gray-700">Created:</span>
+                <span className="inter-medium text-gray-700">Created:</span>
                 <span className="ml-2 text-gray-900">
                   {team.createdAt?.toDate?.()?.toLocaleDateString() || 'Unknown'}
                 </span>
@@ -139,7 +143,7 @@ function TeamDetailsPage() {
 
               {team.techStack && team.techStack.length > 0 && (
                 <div>
-                  <span className="font-medium text-gray-700">Tech Stack:</span>
+                  <span className="inter-medium text-gray-700">Tech Stack:</span>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {team.techStack.map((tech, index) => (
                       <span

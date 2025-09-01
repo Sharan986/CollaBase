@@ -62,7 +62,7 @@ function ProfilePage() {
   };
 
   if (!currentUser || !userProfile) {
-    return <div className="text-center p-8">Loading...</div>;
+    return <div className="text-center p-8 inter-regular">Loading...</div>;
   }
 
   return (
@@ -81,10 +81,10 @@ function ProfilePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-3xl inter-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-4">
             Edit Your Profile
           </h1>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-slate-600 inter-regular">
             Update your information to help teams find you
           </p>
         </div>
@@ -94,7 +94,7 @@ function ProfilePage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm inter-medium text-gray-700 mb-2">
                 Full Name *
               </label>
               <input
@@ -110,7 +110,7 @@ function ProfilePage() {
 
             {/* Year */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm inter-medium text-gray-700 mb-2">
                 Academic Year *
               </label>
               <select
@@ -132,7 +132,7 @@ function ProfilePage() {
 
             {/* Branch */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm inter-medium text-gray-700 mb-2">
                 Branch/Major *
               </label>
               <input
@@ -148,7 +148,7 @@ function ProfilePage() {
 
             {/* Skills */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm inter-medium text-gray-700 mb-2">
                 Skills
               </label>
               <input
@@ -159,12 +159,12 @@ function ProfilePage() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 placeholder="e.g., React, Python, Design, Machine Learning (comma separated)"
               />
-              <p className="text-sm text-gray-500 mt-1">Separate multiple skills with commas</p>
+              <p className="text-sm text-gray-500 mt-1 inter-regular">Separate multiple skills with commas</p>
             </div>
 
             {/* Interests */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm inter-medium text-gray-700 mb-2">
                 Interests
               </label>
               <input
@@ -175,12 +175,12 @@ function ProfilePage() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 placeholder="e.g., Web Development, AI, Gaming, Photography (comma separated)"
               />
-              <p className="text-sm text-gray-500 mt-1">Separate multiple interests with commas</p>
+              <p className="text-sm text-gray-500 mt-1 inter-regular">Separate multiple interests with commas</p>
             </div>
 
             {/* Email (readonly) */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm inter-medium text-gray-700 mb-2">
                 Email Address
               </label>
               <input
@@ -189,7 +189,7 @@ function ProfilePage() {
                 disabled
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-500 cursor-not-allowed"
               />
-              <p className="text-sm text-gray-500 mt-1">Email cannot be changed</p>
+              <p className="text-sm text-gray-500 mt-1 inter-regular">Email cannot be changed</p>
             </div>
 
             {/* Buttons */}
@@ -197,17 +197,17 @@ function ProfilePage() {
               <button
                 type="button"
                 onClick={() => navigate('/dashboard')}
-                className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium"
+                className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 inter-medium"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 inter-medium disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
                 {loading ? (
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center inter-medium">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                     Updating...
                   </div>
